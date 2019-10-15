@@ -1,16 +1,19 @@
 package com.mmall.common;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.junit.Test;
 
 import java.io.Serializable;
 
 /**
- * 实现
- * @param <T>
+ * 统一定义ResponseCode类
+ * 返回各 Response
  */
+//@JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
+
 // 保证 序列化json 的时候 如果是null对象 key也消失;
 public class ServiceResponse<T> implements Serializable {
     private int status;
@@ -50,8 +53,14 @@ public class ServiceResponse<T> implements Serializable {
     public boolean isSuccess(){
         return this.status ==  ResponseCode.SUCCESS.getCode();
     }
+
+    // 注意缺失了任意一个get[属性的方法]都会导致 最后出来的序列化数据拿不到;
     public T getData(){
         return data;
+    }
+
+    public int getStatus() {
+        return status;
     }
 
     public String getMsg() {

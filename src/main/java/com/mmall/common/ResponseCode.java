@@ -1,12 +1,14 @@
 package com.mmall.common;
 
-// 定义返回的Code;
-public enum  ResponseCode {
+/**
+ * 定义 返回的Code 枚举
+ */
+public enum ResponseCode {
     /**
      * 枚举构造器
      */
     SUCCESS(0,"SUCCESS"),
-    ERROR(0,"ERROR"),
+    ERROR(1,"ERROR"),
     NEED_LOGIN(10,"NEED_LOGIN"),
     ILLEGAL_ARGUEMENT(2,"ILLEGAL_ARGUEMENT");
 

@@ -180,7 +180,7 @@
       AND  answer = #{answer}
   </select>
   <update id="updatePasswordByUsername" parameterType="map">
-    update mmal_user
+    update mmall_user
     set password = #{passwordnew},update_time = now()
     where username = #{username}
   </update>

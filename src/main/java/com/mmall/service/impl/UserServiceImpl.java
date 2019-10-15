@@ -30,7 +30,7 @@ public class UserServiceImpl implements IUserService {
         String md5password = MD5Util.MD5EncodeUtf8(password);
         User user = userMapper.selectLogin(username,md5password);
         if(user == null){
-            return ServiceResponse.createByErrorMessage("密码错误");
+            return ServiceResponse.createByErrorMessage("账号或者密码错误");
         }
         // 设置为空
         user.setPassword(StringUtils.EMPTY);
@@ -105,8 +105,9 @@ public class UserServiceImpl implements IUserService {
             return  ServiceResponse.createByErrorMessage("用户不存在");
         }
         String question = userMapper.selectQuestionByUsername(username);
+        // 成功情况;
         if(StringUtils.isNoneBlank(question)){
-            return ServiceResponse.createByErrorMessage(question);
+            return ServiceResponse.createBySuccess(question);
         }
         return ServiceResponse.createByErrorMessage("找回密码的问题是空的");
     }
@@ -139,7 +140,7 @@ public class UserServiceImpl implements IUserService {
      */
     public ServiceResponse<String> forgetResetPassword(String username, String passwordnew,String forgetToken){
         // 校验token;
-        if(StringUtils.isNoneBlank(forgetToken)){
+        if(StringUtils.isBlank(forgetToken)){
             return ServiceResponse.createByErrorMessage("参数错误,token需要传递");
         }
         // 校验用户
@@ -150,9 +151,9 @@ public class UserServiceImpl implements IUserService {
         }
         // 获取token
         String token = TokenCache.getKey(TokenCache.TOKEN_PREFIX+username);
-
         // 判定token;
-        if(StringUtils.isNoneBlank(token)){
+        if(StringUtils.isBlank(token)){
+            System.out.println("[token]:"+token);
             return  ServiceResponse.createByErrorMessage("token无效或过期");
         }
         // equal判断 通过token校验
@@ -222,6 +223,16 @@ public class UserServiceImpl implements IUserService {
         user.setPassword(StringUtils.EMPTY);
         return ServiceResponse.createBySuccess(user);
 
+    }
+
+
+    // backend
+    // 检测是否是管理员
+    public ServiceResponse checkAdminRole(User user){
+       if(user !=null && user.getRole().intValue() == Const.Role.Role_ADMIN){
+           return ServiceResponse.createBySuccess();
+       }
+       return ServiceResponse.createByError();
     }
 
 }

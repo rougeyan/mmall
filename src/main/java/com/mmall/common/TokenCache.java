@@ -8,6 +8,9 @@ import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.TimeUnit;
 
+/**
+ * token 缓存
+ */
 public class TokenCache {
     private static Logger logger = LoggerFactory.getLogger(TokenCache.class);
     public static final String TOKEN_PREFIX = "token_";

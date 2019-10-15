@@ -44,7 +44,7 @@ public class UserController {
         if(response.isSuccess()){
             session.setAttribute(Const.CURRENT_USER,response.getData());
         }
-        return null;
+        return response;
     }
 
     /**
@@ -56,7 +56,7 @@ public class UserController {
     @ResponseBody()
     public ServiceResponse<User> logout(HttpSession session){
         session.removeAttribute(Const.CURRENT_USER);
-        return ServiceResponse.createBySuccess();
+        return ServiceResponse.createBySuccessMessage("登出成功");
     }
 
     /**
@@ -119,6 +119,7 @@ public class UserController {
         // 会使用到 guawa 缓存;
         return iUserService.checkAnswer(username,question,answer);
     }
+
     // 重置密码 有时效性 所以使用缓存;
     @RequestMapping(value ="forget_reset_password.do",method = RequestMethod.POST)
     @ResponseBody()
@@ -127,7 +128,7 @@ public class UserController {
     }
 
 
-    // 登录状态的重置密码
+    // 登录状态的状态下 => 重置密码
     // 重置密码 有时效性 所以使用缓存;
     @RequestMapping(value ="reset_password.do",method = RequestMethod.POST)
     @ResponseBody()
@@ -140,7 +141,7 @@ public class UserController {
         return iUserService.resetPassword(passwordOld,passwordNew,user);
     }
 
-    @RequestMapping(value ="update_information.do",method = RequestMethod.POST)
+    @RequestMapping(value =" ",method = RequestMethod.POST)
     @ResponseBody()
     public ServiceResponse<User> update_Information(HttpSession session,User user){
         User currentUser =(User)session.getAttribute(Const.CURRENT_USER);
