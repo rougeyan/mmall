@@ -8,7 +8,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Properties;
 
+
 /**
+ * 读取配置文件
  * Created by geely
  */
 public class PropertiesUtil {

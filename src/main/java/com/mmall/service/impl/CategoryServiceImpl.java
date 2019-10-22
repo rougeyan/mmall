@@ -77,7 +77,7 @@ public class CategoryServiceImpl implements ICategoryService {
      * @param categoryId
      * @return
      */
-    public ServiceResponse selectCategoryAndChildrenById(Integer categoryId){
+    public ServiceResponse<List<Integer>> selectCategoryAndChildrenById(Integer categoryId){
         // 这个Sets是guawa里面提供的方法;
         // 集合处理比较强大
         Set<Category> categorySet = Sets.newHashSet();
