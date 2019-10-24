@@ -11,10 +11,21 @@ public class Const {
     public static final String EMAIL = "email";
     public static final String USERNAME = "username";
 
+    // 产品列表: 动态排序 圣墟降序
     public interface ProductListOrderBy{
         Set<String> Price_ASC_DESC = Sets.newHashSet("price_desc","price_asc");
     }
 
+
+    // 购物车选中状态
+    public interface Cart{
+        int CHECKED = 1; // 即购物车选中状态
+        int UNCHECKED = 0; // 购物车未选中状态;
+
+        String LIMIT_NUM_FAIL = "LIMIT_NUM_FAIL";
+
+        String LIMIT_NUM_SUCCESS = "LIMIT_NUM_SUCCESS";
+    }
 
     // 小技巧 不作枚举;
     public interface Role{
