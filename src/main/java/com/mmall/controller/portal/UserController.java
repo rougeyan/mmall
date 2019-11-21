@@ -80,7 +80,6 @@ public class UserController {
     public ServiceResponse<String> checkValid(String str,String type){
         return iUserService.checkValid(str, type);
     }
-
     /**
      * 获取用户信息
      * @param session

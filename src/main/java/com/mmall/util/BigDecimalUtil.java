@@ -9,7 +9,7 @@ public class BigDecimalUtil {
 
     private BigDecimalUtil(){
 
-    }
+}
 
     // 加
     public static BigDecimal add(double v1,double v2){

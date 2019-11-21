@@ -7,8 +7,8 @@
     <!--导入属性配置-->
     <properties resource="datasource.properties"></properties>
 
-    <!--指定特定数据库的jdbc驱动jar包的位置-->
-    <classPathEntry location="${db.driverLocation}"/>
+    <!--指定特定数据库的jdbc驱动jar包的位置,若不指定的话??maven 引入-->
+    <classPathEntry location="mysql-connector-java-8.0.13.jar"/>
 
     <context id="default" targetRuntime="MyBatis3">
 

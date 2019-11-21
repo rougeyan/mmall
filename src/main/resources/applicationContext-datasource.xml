@@ -9,8 +9,10 @@
      http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
      http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
+    <!--扫描注解-->
     <context:component-scan base-package="com.mmall" annotation-config="true"/>
 
+    <!--引入properties文件路径-->
     <bean id="propertyConfigurer"
           class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="order" value="2"/>
@@ -23,7 +25,7 @@
         <property name="fileEncoding" value="utf-8"/>
     </bean>
 
-
+    <!--使用datesource.properties 作为变量进入 文件内容-->
     <bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
         <property name="driverClassName" value="${db.driverClassName}"/>
         <property name="url" value="${db.url}"/>
@@ -57,12 +59,12 @@
         <property name="validationQuery" value="SELECT 1 FROM dual"/>
     </bean>
 
+
+    <!--SQL bean工厂 以及插件配置-->
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
         <property name="dataSource" ref="dataSource"/>
         <property name="mapperLocations" value="classpath*:mappers/*Mapper.xml"></property>
-
         <!-- 分页插件 -->
-
         <property name="plugins">
             <array>
                 <bean class="com.github.pagehelper.PageInterceptor">
@@ -78,6 +80,7 @@
 
     </bean>
 
+    <!--引入DAO层配置-->
     <bean name="mapperScannerConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
         <property name="basePackage" value="com.mmall.dao"/>
     </bean>
