@@ -13,6 +13,7 @@
     <context:component-scan base-package="com.mmall" annotation-config="true"/>
 
     <!--引入properties文件路径-->
+    <!--配置properties文件路径-->
     <bean id="propertyConfigurer"
           class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="order" value="2"/>
@@ -26,6 +27,7 @@
     </bean>
 
     <!--使用datesource.properties 作为变量进入 文件内容-->
+    <!-- 配置dbcp数据源 -->
     <bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
         <property name="driverClassName" value="${db.driverClassName}"/>
         <property name="url" value="${db.url}"/>
@@ -61,6 +63,7 @@
 
 
     <!--SQL bean工厂 以及插件配置-->
+    <!-- 配置Session工厂 -->
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
         <property name="dataSource" ref="dataSource"/>
         <property name="mapperLocations" value="classpath*:mappers/*Mapper.xml"></property>
@@ -81,6 +84,7 @@
     </bean>
 
     <!--引入DAO层配置-->
+    <!-- 采用自动包扫描的方式来注册Mapper -->
     <bean name="mapperScannerConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
         <property name="basePackage" value="com.mmall.dao"/>
     </bean>

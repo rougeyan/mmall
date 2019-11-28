@@ -17,6 +17,7 @@
 
     <!--配置datasource xml-->
     <import resource="applicationContext-datasource.xml"/>
+    <import resource="applicationContext-redis.xml"/>
 
 
 </beans>
