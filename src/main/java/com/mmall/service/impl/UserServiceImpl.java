@@ -33,7 +33,16 @@ public class UserServiceImpl implements IUserService {
             return ServiceResponse.createByErrorMessage("账号或者密码错误");
         }
         // 设置为空
+        user.setId(null);
         user.setPassword(StringUtils.EMPTY);
+        user.setEmail(StringUtils.EMPTY);
+        user.setPhone(StringUtils.EMPTY);
+        user.setQuestion(StringUtils.EMPTY);
+        user.setAnswer(StringUtils.EMPTY);
+        user.setRole(-1);
+        user.setCreateTime(null);
+        user.setUpdateTime(null);
+
 
         return ServiceResponse.createBySuccess("登录成功",user);
     }
@@ -58,6 +67,8 @@ public class UserServiceImpl implements IUserService {
 
         // 默认设置为普通用户;
         user.setRole(Const.Role.Role_CUSTOMER);
+        // 后端对密码进行md5加密
+        user.setPassword(MD5Util.MD5EncodeUtf8(user.getPassword()));
         // 不能设置密码为明文; MD5加密
         int resultCount = userMapper.insert(user);
         if(resultCount == 0){
@@ -102,7 +113,7 @@ public class UserServiceImpl implements IUserService {
         ServiceResponse validResponse = this.checkValid(username,Const.USERNAME);
         if(validResponse.isSuccess()){
             // 用户不存在
-            return  ServiceResponse.createByErrorMessage("用户不存在");
+            return ServiceResponse.createByErrorMessage("用户不存在");
         }
         String question = userMapper.selectQuestionByUsername(username);
         // 成功情况;

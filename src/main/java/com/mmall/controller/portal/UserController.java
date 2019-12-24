@@ -1,19 +1,21 @@
 package com.mmall.controller.portal;
 
+import com.mmall.common.CheckLoginStatus;
 import com.mmall.common.Const;
 import com.mmall.common.ResponseCode;
 import com.mmall.common.ServiceResponse;
 import com.mmall.pojo.User;
 import com.mmall.service.IUserService;
+import com.mmall.util.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 /**
@@ -27,24 +29,67 @@ import javax.servlet.http.HttpSession;
 public class UserController {
     @Autowired
     private IUserService iUserService;
+
+    @Autowired
+    private RedisUtil redisUtil;
+
+    @Autowired
+    private CheckLoginStatus checkLoginStatus;
+
     /**
-     * 用户登录
+     * 登陆接口
+     * @param session_id
      * @param username
      * @param password
      * @param session
+     * @param httpServletResponse
      * @return
      */
     @RequestMapping(value = "login.do", method = RequestMethod.POST)
-    @ResponseBody()
-    public ServiceResponse<User> login(String username, String password, HttpSession session){
-        // 流程
-        //service -->mybatis --> dao
+    @ResponseBody
+    public ServiceResponse<User> login(String session_id, String username, String password, HttpSession session, HttpServletResponse httpServletResponse, HttpServletRequest request){
 
+        // 带session_id
+        if(StringUtils.isNotBlank(session_id)){
+            Object sessionValue = redisUtil.get(session_id);
+            // 登陆已过期
+            if(sessionValue == null){
+                return ServiceResponse.createByErrorMessage("登陆过期,请重新登陆");
+            }
+            // 已经登录
+            return ServiceResponse.createBySuccessMessage("请勿重复登陆");
+        }
+        // 未带session_id
+        if(StringUtils.isBlank(username) || StringUtils.isBlank(password)){
+            return ServiceResponse.createByErrorMessage("账号密码填写错误");
+        }
         ServiceResponse<User> response = iUserService.login(username,password);
+
+        // 组装
+
+        // 合成 sessionID 和session + timeStamp + endTime;
+        String assembleSessionId = this.assembleSessionId(response.getData());
+        // 因为我的时效性只有五分钟
+        // 不能去getTime()组合字符串 因为这样回导致重复登陆的时候每次的缓存都不一样
+        // 我采取的方法是
+        // 添加到redis中
+        redisUtil.set(assembleSessionId,response.getData(),300);
+        //  添加cookies
+        CookieUtils.setCookie(request,httpServletResponse,"session_id",assembleSessionId,300);
+
         if(response.isSuccess()){
             session.setAttribute(Const.CURRENT_USER,response.getData());
         }
         return response;
+    }
+
+    // 组合assembleSessionId
+    private String assembleSessionId(User user){
+        String userName = user.getUsername();
+        String dateTime = String.valueOf(DateTimeUtil.getCurrentHourTime().getTime());
+        String assembleString = new StringBuilder().append(userName).append("%").append(dateTime).append("*").toString();
+        String assembleSessionId = MD5Util.MD5EncodeUtf8(assembleString);
+        return assembleSessionId;
     }
 
     /**
@@ -54,9 +99,17 @@ public class UserController {
      */
     @RequestMapping(value ="logout.do",method = RequestMethod.POST)
     @ResponseBody()
-    public ServiceResponse<User> logout(HttpSession session){
-        session.removeAttribute(Const.CURRENT_USER);
+    public ServiceResponse<User> logout(String session_id, HttpSession session, HttpServletRequest request, HttpServletResponse response){
+        if(StringUtils.isNotBlank(session_id)){
+            redisUtil.del(session_id);
+        }
+
+        CookieUtils.setCookie(request,response,"session_id","" );
         return ServiceResponse.createBySuccessMessage("登出成功");
+//
+//
+//        session.removeAttribute(Const.CURRENT_USER);
+//        return ServiceResponse.createBySuccessMessage("登出成功");
     }
 
     /**
@@ -85,9 +138,16 @@ public class UserController {
      * @param session
      * @return
      */
-    @RequestMapping(value ="get_user_info.do",method = RequestMethod.POST)
+    @RequestMapping(value ="get_user_info.do",method = RequestMethod.GET)
     @ResponseBody()
-    public ServiceResponse<User> getUserInfo(HttpSession session){
+    public ServiceResponse<User> getUserInfo(HttpSession session,String session_id){
+//         这里就是通过获取session_id 来判定是否已登陆;
+//        User redisuser = (User)checkLoginStatus.check_token_valid(session_id);
+//
+//        if(redisuser != null){
+//            return ServiceResponse.createBySuccess(redisuser);
+//        }
+
         User user = (User) session.getAttribute(Const.CURRENT_USER);
         // 空判断
         if(user != null){
@@ -140,7 +200,8 @@ public class UserController {
         return iUserService.resetPassword(passwordOld,passwordNew,user);
     }
 
-    @RequestMapping(value =" ",method = RequestMethod.POST)
+    // 更新个人信息;
+    @RequestMapping(value ="update_information.do",method = RequestMethod.POST)
     @ResponseBody()
     public ServiceResponse<User> update_Information(HttpSession session,User user){
         User currentUser =(User)session.getAttribute(Const.CURRENT_USER);

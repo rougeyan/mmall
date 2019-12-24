@@ -11,7 +11,7 @@ public class Const {
     public static final String EMAIL = "email";
     public static final String USERNAME = "username";
 
-    // 产品列表: 动态排序 圣墟降序
+    // 产品列表: 动态排序 升序降序
     public interface ProductListOrderBy{
         Set<String> Price_ASC_DESC = Sets.newHashSet("price_desc","price_asc");
     }
