@@ -34,16 +34,6 @@ public class UserServiceImpl implements IUserService {
         }
         // 设置为空
         user.setId(null);
-        user.setPassword(StringUtils.EMPTY);
-        user.setEmail(StringUtils.EMPTY);
-        user.setPhone(StringUtils.EMPTY);
-        user.setQuestion(StringUtils.EMPTY);
-        user.setAnswer(StringUtils.EMPTY);
-        user.setRole(-1);
-        user.setCreateTime(null);
-        user.setUpdateTime(null);
-
-
         return ServiceResponse.createBySuccess("登录成功",user);
     }
 
@@ -202,6 +192,11 @@ public class UserServiceImpl implements IUserService {
         return ServiceResponse.createByErrorMessage("密码更新失败");
     }
 
+    /**
+     * 登陆状态下 更新个人信息;
+     * @param user
+     * @return
+     */
     public ServiceResponse<User> updateInformation(User user){
         // username 不能被更新
         // email 也是进行一个校验, 校验新的email是否已经存在,
