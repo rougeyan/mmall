@@ -186,7 +186,7 @@ public class productManageController {
         User user = (User)session.getAttribute(Const.CURRENT_USER);
         if(user == null){
             resultMap.put("success",false);
-            resultMap.put("msg","请登录管理员'");
+            resultMap.put("msg","请登录管理员");
             return  resultMap;
         }
         // 校验一下是否是管理员
@@ -214,7 +214,7 @@ public class productManageController {
             return resultMap;
         }else{
             resultMap.put("success",false);
-            resultMap.put("msg","无权限操作'");
+            resultMap.put("msg","无权限操作");
             return resultMap;
         }
 

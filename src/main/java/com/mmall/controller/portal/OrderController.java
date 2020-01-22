@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
@@ -32,7 +33,84 @@ public class OrderController {
     @Autowired
     private IOrderService iOrderService;
 
-//    在order里面都有一个pay接口
+    // 创建订单
+    //  在order里面都有一个pay接口
+    @RequestMapping("create.do")
+    @ResponseBody
+    public ServiceResponse create(HttpSession session, Integer shippingId){
+        User user = (User) session.getAttribute(Const.CURRENT_USER);
+        if(user == null){
+            return ServiceResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());
+        }
+        return iOrderService.createOrder(user.getId(),shippingId);
+    }
+
+    // 取消订单
+    //  在order里面都有一个pay接口
+    @RequestMapping("cancel.do")
+    @ResponseBody
+    public ServiceResponse cancel(HttpSession session, Long orderNo){
+        User user = (User) session.getAttribute(Const.CURRENT_USER);
+        if(user == null){
+            return ServiceResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());
+        }
+        return iOrderService.cancel(user.getId(),orderNo);
+    }
+
+    // 预下单, 未创建订单 但是从 购物车进入  购物车 ==>预下单(选择联系人) ==> 提交订单
+    // 获取购物车中的产品 客户在购物车预览的时候 看到购物车中的明细
+    // 获取已经选中的购物车产品列表;
+    @RequestMapping("get_order_cart_product.do")
+    @ResponseBody
+    public ServiceResponse getOrderCartProduct(HttpSession session){
+        User user = (User) session.getAttribute(Const.CURRENT_USER);
+        if(user == null){
+            return ServiceResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());
+        }
+        return iOrderService.getOrderCartProduct(user.getId());
+    }
+
+
+    @RequestMapping("detail.do")
+    @ResponseBody
+    public ServiceResponse detail(HttpSession session, Long orderNo){
+        User user = (User) session.getAttribute(Const.CURRENT_USER);
+        if(user == null){
+            return ServiceResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());
+        }
+        return iOrderService.getOrderDetail(user.getId(),orderNo);
+    }
+
+    @RequestMapping("list.do")
+    @ResponseBody
+    public ServiceResponse list(HttpSession session,
+                                @RequestParam(value="pageNum",defaultValue = "1") int pageNum,
+                                @RequestParam(value="pageSize",defaultValue = "10") int pageSize){
+        User user = (User) session.getAttribute(Const.CURRENT_USER);
+        if(user == null){
+            return ServiceResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());
+        }
+        return iOrderService.getOrderList(user.getId(),pageNum,pageSize);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    //  在order里面都有一个pay接口
     @RequestMapping("pay.do")
     @ResponseBody
     public ServiceResponse pay(HttpSession session, Long orderNo , HttpServletRequest requset){
