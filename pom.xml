@@ -357,5 +357,45 @@
       </plugin>
     </plugins>
 
+
+    <!--配置maven环境隔离-->
+    <resources>
+      <resource>
+        <directory>src/main/resources.${deploy.type}</directory>
+        <excludes>
+          <exclude>*.jsp</exclude>
+        </excludes>
+      </resource>
+      <!--公共部分-->
+      <resource>
+        <directory>src/main/resources</directory>
+      </resource>
+    </resources>
   </build>
+
+
+  <!--配置maven的profiles 节点与build同级-->
+  <profiles>
+    <profile>
+      <id>dev</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <properties>
+        <delpoy.type>dev</delpoy.type>
+      </properties>
+    </profile>
+    <profile>
+      <id>beta</id>
+      <properties>
+        <delpoy.type>beta</delpoy.type>
+      </properties>
+    </profile>
+    <profile>
+      <id>prod</id>
+      <properties>
+        <delpoy.type>prod</delpoy.type>
+      </properties>
+    </profile>
+  </profiles>
 </project>
