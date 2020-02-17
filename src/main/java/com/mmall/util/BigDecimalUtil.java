@@ -38,9 +38,4 @@ public class BigDecimalUtil {
 
         //除不尽的情况
     }
-
-
-
-
-
 }

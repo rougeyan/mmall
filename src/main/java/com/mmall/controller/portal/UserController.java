@@ -1,19 +1,21 @@
 package com.mmall.controller.portal;
 
+import com.mmall.common.CheckLoginStatus;
 import com.mmall.common.Const;
 import com.mmall.common.ResponseCode;
 import com.mmall.common.ServiceResponse;
 import com.mmall.pojo.User;
 import com.mmall.service.IUserService;
+import com.mmall.util.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 /**
@@ -25,23 +27,31 @@ import javax.servlet.http.HttpSession;
 @Controller
 @RequestMapping("/user/")
 public class UserController {
+
     @Autowired
     private IUserService iUserService;
+
+    @Autowired
+    private RedisUtil redisUtil;
+
     /**
-     * 用户登录
+     * 登陆接口
      * @param username
      * @param password
      * @param session
      * @return
      */
     @RequestMapping(value = "login.do", method = RequestMethod.POST)
-    @ResponseBody()
+    @ResponseBody
     public ServiceResponse<User> login(String username, String password, HttpSession session){
         // 流程
         //service -->mybatis --> dao
 
         ServiceResponse<User> response = iUserService.login(username,password);
         if(response.isSuccess()){
+            System.out.println(session.getId());
+            // 83775F71478D662C0A65D05374358296
+            // redisUtil.
             session.setAttribute(Const.CURRENT_USER,response.getData());
         }
         return response;
@@ -59,6 +69,14 @@ public class UserController {
         return ServiceResponse.createBySuccessMessage("登出成功");
     }
 
+    // 组合assembleSessionId
+    private String assembleSessionId(User user){
+        String userName = user.getUsername();
+        String dateTime = String.valueOf(DateTimeUtil.getCurrentHourTime().getTime());
+        String assembleString = new StringBuilder().append(userName).append("%").append(dateTime).append("*").toString();
+        String assembleSessionId = MD5Util.MD5EncodeUtf8(assembleString);
+        return assembleSessionId;
+    }
     /**
      * 注册接口;
      * 如果不传user
@@ -85,9 +103,16 @@ public class UserController {
      * @param session
      * @return
      */
-    @RequestMapping(value ="get_user_info.do",method = RequestMethod.POST)
+    @RequestMapping(value ="get_user_info.do",method = RequestMethod.GET)
     @ResponseBody()
-    public ServiceResponse<User> getUserInfo(HttpSession session){
+    public ServiceResponse<User> getUserInfo(HttpSession session,String session_id){
+//         这里就是通过获取session_id 来判定是否已登陆;
+//        User redisuser = (User)checkLoginStatus.check_token_valid(session_id);
+//
+//        if(redisuser != null){
+//            return ServiceResponse.createBySuccess(redisuser);
+//        }
+
         User user = (User) session.getAttribute(Const.CURRENT_USER);
         // 空判断
         if(user != null){
@@ -140,7 +165,8 @@ public class UserController {
         return iUserService.resetPassword(passwordOld,passwordNew,user);
     }
 
-    @RequestMapping(value =" ",method = RequestMethod.POST)
+    // 更新个人信息;
+    @RequestMapping(value ="update_information.do",method = RequestMethod.POST)
     @ResponseBody()
     public ServiceResponse<User> update_Information(HttpSession session,User user){
         User currentUser =(User)session.getAttribute(Const.CURRENT_USER);

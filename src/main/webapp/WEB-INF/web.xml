@@ -40,16 +40,20 @@
             classpath:applicationContext.xml
         </param-value>
     </context-param>
-
+    <!--https://segmentfault.com/a/1190000013124026-->
     <!--springmvc 配置-->
     <servlet>
+        <!--为servlet配置一个名称 一般与类名一致-->
         <servlet-name>dispatcher</servlet-name>
+        <!--类存放的位置-->
         <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
 
 
     <!--*.do 的请求被springmvc拦截-->
+    <!--所有的*.do请求url都被映射到dispatcher的这个servlet上面-->
+    <!--配置servlet的映射路径-->
     <servlet-mapping>
         <servlet-name>dispatcher</servlet-name>
         <url-pattern>*.do</url-pattern>

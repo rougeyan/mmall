@@ -5,6 +5,8 @@
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:aop="http://www.springframework.org/schema/aop"
        xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:cache="http://www.springframework.org/schema/cache"
+       xmlns:util="http://www.springframework.org/schema/util"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.springframework.org/schema/mvc
@@ -27,9 +29,8 @@
     </bean>
 
     <!-- redis连接工厂 -->
-    <bean id="connectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
+    <bean id="jedisConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
         <property name="poolConfig" ref="jedisPoolConfig"/>
-
         <property name="hostName" value="${redis.host}"/>
         <property name="port" value="${redis.port}"/>
         <property name="password" value="${redis.password}"/>
@@ -37,50 +38,88 @@
     </bean>
 
     <!--配置redis 模板-->
-    <bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate">
-        <property name="connectionFactory" ref="connectionFactory"/>
+    <!--  StringRedisTemplate 也就是对应的序列化  -->
+    <!--<bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate">-->
+    <!--<property name="connectionFactory" ref="connectionFactory"></property>-->
+    <!--<property name="defaultSerializer">-->
+    <!--<bean class="org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer"></bean>-->
+    <!--</property>-->
+    <!--&lt;!&ndash;处理 key 的序列化和反序列化&ndash;&gt;-->
+    <!--<property name="keySerializer">-->
+    <!--<bean class="org.springframework.data.redis.serializer.StringRedisSerializer"></bean>-->
+    <!--</property>-->
+    <!--&lt;!&ndash;处理 hash 类型 key 的序列化和反序列化&ndash;&gt;-->
+    <!--<property name="hashKeySerializer">-->
+    <!--<bean class="org.springframework.data.redis.serializer.StringRedisSerializer" />-->
+    <!--</property>-->
+    <!--&lt;!&ndash;新增 其他下列两项 从别处&ndash;&gt;-->
+    <!--&lt;!&ndash;假如引入这两项回变成二进制&ndash;&gt;-->
+    <!--&lt;!&ndash;&lt;!&ndash;处理 value 的序列化和反序列化&ndash;&gt;&ndash;&gt;-->
+    <!--&lt;!&ndash;<property name="valueSerializer">&ndash;&gt;-->
+    <!--&lt;!&ndash;<bean class="org.springframework.data.redis.serializer.JdkSerializationRedisSerializer"/>&ndash;&gt;-->
+    <!--&lt;!&ndash;</property>&ndash;&gt;-->
+    <!--&lt;!&ndash;&lt;!&ndash;处理 hash 类型 value 的序列化和反序列化&ndash;&gt;&ndash;&gt;-->
+    <!--&lt;!&ndash;<property name="hashValueSerializer">&ndash;&gt;-->
+    <!--&lt;!&ndash;<bean class="org.springframework.data.redis.serializer.StringRedisSerializer" />&ndash;&gt;-->
+    <!--&lt;!&ndash;</property>&ndash;&gt;-->
+    <!--</bean>-->
 
-        <property name="keySerializer">
-            <bean class="org.springframework.data.redis.serializer.StringRedisSerializer"/>
-        </property>
-        <property name="valueSerializer">
-            <bean class="org.springframework.data.redis.serializer.JdkSerializationRedisSerializer"/>
-        </property>
-
-        <property name="hashKeySerializer">
-            <bean class="org.springframework.data.redis.serializer.StringRedisSerializer" />
-        </property>
-        <property name="hashValueSerializer">
-            <bean class="org.springframework.data.redis.serializer.StringRedisSerializer" />
-        </property>
+    <bean id="redisTemplate" class="org.springframework.data.redis.core.StringRedisTemplate">
+        <property name="connectionFactory" ref="jedisConnectionFactory" />
     </bean>
 
-    <!-- 缓存拦截器配置 -->
-    <bean id="methodCacheInterceptor" class="com.mmall.interceptor.MethodCacheInterceptor">
-        <property name="redisUtil" ref="redisUtil"/>
-        <property name="defaultCacheExpireTime" value="${defaultCacheExpireTime}"/>
-        <!-- 禁用缓存的类名列表 -->
-        <property name="targetNamesList">
-            <list>
-                <value></value>
-            </list>
-        </property>
-
-        <!-- 禁用缓存的方法名列表 -->
-        <property name="methodNamesList">
-            <list>
-                <value></value>
-            </list>
-        </property>
-    </bean>
-
+    <!-- RedisUtil注入RedisTemplate -->
+    <!--这里的代码相当于
+        // 在redisUtils 里面 依赖注入了
+        @Autowired
+        private RedisTemplate<xxx, xxx> redisTemplate;
+    -->
     <bean id="redisUtil" class="com.mmall.util.RedisUtil">
-        <property name="redisTemplate" ref="redisTemplate"/>
+        <property name="redisTemplate" ref="redisTemplate" />
+        <!--关于`<constructor-arg>`的说明  [Spring - constructor-arg和property的使用示例](https://blog.51cto.com/racoguo/1236379) -->
+
+        <!--<constructor-arg ref="redisTemplate"/>-->
     </bean>
+
+    <!-- 让Spring Session不再执行config命令 -->
+    <!--<util:constant static-field="org.springframework.session.data.redis.config.ConfigureRedisAction.NO_OP"/>-->
+
+    <bean id="checkLoginStatus" class="com.mmall.common.CheckLoginStatus">
+        <constructor-arg ref="redisUtil"/>
+    </bean>
+
+    <!--这个是使用@cacheable注解 来完成 参考[SSM框架整合Redis详解](https://blog.csdn.net/Mr_FLM/article/details/86506389)-->
+    <!--<bean id="cacheManager" class="org.springframework.data.redis.cache.RedisCacheManager">-->
+        <!--<constructor-arg ref="redisTemplate" />-->
+    <!--</bean>-->
+
+    <!-- spring 缓存拦截器配置 -->
+    <!--<bean id="methodCacheInterceptor" class="com.mmall.interceptor.MethodCacheInterceptor">-->
+        <!--<property name="redisUtil" ref="redisUtil"/>-->
+        <!--<property name="defaultCacheExpireTime" value="${defaultCacheExpireTime}"/>-->
+        <!--&lt;!&ndash; 禁用缓存的类名列表 &ndash;&gt;-->
+        <!--<property name="targetNamesList">-->
+            <!--<list>-->
+                <!--<value></value>-->
+            <!--</list>-->
+        <!--</property>-->
+
+        <!--&lt;!&ndash; 禁用缓存的方法名列表 &ndash;&gt;-->
+        <!--<property name="methodNamesList">-->
+            <!--<list>-->
+                <!--<value></value>-->
+            <!--</list>-->
+        <!--</property>-->
+    <!--</bean>-->
+    <!--<bean id="redisUtil" class="com.mmall.util.RedisUtil">-->
+        <!--<property name="redisTemplate" ref="redisTemplate"/>-->
+    <!--</bean>-->
+
+
 
     <!--配置切面拦截方法 -->
-    <aop:config proxy-target-class="true">
-        <aop:pointcut id="controllerMethodPointcut" expression="execution(* com.ssm.service.impl.*.list*(..))"/>
-        <aop:advisor advice-ref="methodCacheInterceptor" pointcut-ref="controllerMethodPointcut"/>
-    </aop:config>
+    <!--<aop:config proxy-target-class="true">-->
+        <!--<aop:pointcut id="controllerMethodPointcut" expression="execution(* com.mmall.service.impl.*.list*(..))"/>-->
+        <!--<aop:advisor advice-ref="methodCacheInterceptor" pointcut-ref="controllerMethodPointcut"/>-->
+    <!--</aop:config>-->
 </beans>
