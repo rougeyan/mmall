@@ -32,7 +32,7 @@ public class TestController {
     @Autowired
     private RedisUtil redisUtil;
 
-    @RequestMapping(value = "testpost.do", method = RequestMethod.POST)
+    @RequestMapping(value = "testSetRedis.do", method = RequestMethod.POST)
     @ResponseBody()
     public ServiceResponse testpost(HttpServletRequest request,
                                     HttpServletResponse response,
@@ -63,7 +63,8 @@ public class TestController {
         mappe.put("key3List",list); // 传入去的时候还没序列化呢?
         mappe.put("key4set",testSet);
         mappe.put("key5obj",orderItem);
-        redisUtil.hmset("mappe",mappe,600);
+//        redisUtil.hmset("mappe",mappe,600);
+        redisUtil.set("mappe","1234");
 
         Cookie cookie = new Cookie("ihavesomecookies","1234444444");
         cookie.setMaxAge(20);//最大有效时间
@@ -79,9 +80,9 @@ public class TestController {
     public ServiceResponse getRedis(HttpServletRequest request,
                                     HttpServletResponse response,
                                     HttpSession session){
-        Map<Object,Object> getmapper = redisUtil.hmget("mappe");
+//        Map<Object,Object> getmapper = redisUtil.hmget("mappe");
         // 遍历就是 迭代器
-        return ServiceResponse.createBySuccess(getmapper);
+        return ServiceResponse.createBySuccess("getRedis");
     }
 
 

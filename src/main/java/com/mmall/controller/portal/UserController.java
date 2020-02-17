@@ -27,60 +27,46 @@ import javax.servlet.http.HttpSession;
 @Controller
 @RequestMapping("/user/")
 public class UserController {
+
     @Autowired
     private IUserService iUserService;
 
     @Autowired
     private RedisUtil redisUtil;
 
-    @Autowired
-    private CheckLoginStatus checkLoginStatus;
-
     /**
      * 登陆接口
-     * @param session_id
      * @param username
      * @param password
      * @param session
-     * @param httpServletResponse
      * @return
      */
     @RequestMapping(value = "login.do", method = RequestMethod.POST)
     @ResponseBody
-    public ServiceResponse<User> login(String session_id, String username, String password, HttpSession session, HttpServletResponse httpServletResponse, HttpServletRequest request){
+    public ServiceResponse<User> login(String username, String password, HttpSession session){
+        // 流程
+        //service -->mybatis --> dao
 
-        // 带session_id
-        if(StringUtils.isNotBlank(session_id)){
-            Object sessionValue = redisUtil.get(session_id);
-            // 登陆已过期
-            if(sessionValue == null){
-                return ServiceResponse.createByErrorMessage("登陆过期,请重新登陆");
-            }
-            // 已经登录
-            return ServiceResponse.createBySuccessMessage("请勿重复登陆");
-        }
-        // 未带session_id
-        if(StringUtils.isBlank(username) || StringUtils.isBlank(password)){
-            return ServiceResponse.createByErrorMessage("账号密码填写错误");
-        }
         ServiceResponse<User> response = iUserService.login(username,password);
-
-        // 组装
-
-        // 合成 sessionID 和session + timeStamp + endTime;
-        String assembleSessionId = this.assembleSessionId(response.getData());
-        // 因为我的时效性只有五分钟
-        // 不能去getTime()组合字符串 因为这样回导致重复登陆的时候每次的缓存都不一样
-        // 我采取的方法是
-        // 添加到redis中
-        redisUtil.set(assembleSessionId,response.getData(),300);
-        //  添加cookies
-        CookieUtils.setCookie(request,httpServletResponse,"session_id",assembleSessionId,300);
-
         if(response.isSuccess()){
+            System.out.println(session.getId());
+            // 83775F71478D662C0A65D05374358296
+            // redisUtil.
             session.setAttribute(Const.CURRENT_USER,response.getData());
         }
         return response;
+    }
+
+    /**
+     * 登出接口
+     * @param session
+     * @return
+     */
+    @RequestMapping(value ="logout.do",method = RequestMethod.POST)
+    @ResponseBody()
+    public ServiceResponse<User> logout(HttpSession session){
+        session.removeAttribute(Const.CURRENT_USER);
+        return ServiceResponse.createBySuccessMessage("登出成功");
     }
 
     // 组合assembleSessionId
@@ -91,27 +77,6 @@ public class UserController {
         String assembleSessionId = MD5Util.MD5EncodeUtf8(assembleString);
         return assembleSessionId;
     }
-
-    /**
-     * 登出接口
-     * @param session
-     * @return
-     */
-    @RequestMapping(value ="logout.do",method = RequestMethod.POST)
-    @ResponseBody()
-    public ServiceResponse<User> logout(String session_id, HttpSession session, HttpServletRequest request, HttpServletResponse response){
-        if(StringUtils.isNotBlank(session_id)){
-            redisUtil.del(session_id);
-        }
-
-        CookieUtils.setCookie(request,response,"session_id","" );
-        return ServiceResponse.createBySuccessMessage("登出成功");
-//
-//
-//        session.removeAttribute(Const.CURRENT_USER);
-//        return ServiceResponse.createBySuccessMessage("登出成功");
-    }
-
     /**
      * 注册接口;
      * 如果不传user
