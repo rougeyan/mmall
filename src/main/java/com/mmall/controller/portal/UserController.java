@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @Controller 注解定义是usercontroller
@@ -51,7 +52,7 @@ public class UserController {
         if(response.isSuccess()){
             System.out.println(session.getId());
             // 83775F71478D662C0A65D05374358296
-            // redisUtil.
+//             redisUtil.setEx(session.getId(),response.getData().toString(),15, TimeUnit.SECONDS);
             session.setAttribute(Const.CURRENT_USER,response.getData());
         }
         return response;

@@ -294,18 +294,6 @@
       <artifactId>spring-data-redis</artifactId>
       <version>1.8.4.RELEASE</version>
     </dependency>
-    <!-- redis 相关 使用性能较好的序列化和反序列化jar包-->
-    <dependency>
-      <groupId>com.dyuproject.protostuff</groupId>
-      <artifactId>protostuff-core</artifactId>
-      <version>1.0.8</version>
-    </dependency>
-
-    <dependency>
-      <groupId>com.dyuproject.protostuff</groupId>
-      <artifactId>protostuff-runtime</artifactId>
-      <version>1.0.8</version>
-    </dependency>
   </dependencies>
 
 
