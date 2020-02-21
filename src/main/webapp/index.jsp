@@ -2,6 +2,9 @@
 <html>
 <body>
 <h2>Hello World!</h2>
+<h2>tomcat_1</h2>
+<h2>tomcat_1</h2>
+<h2>tomcat_1</h2>
 <%--springmvc上传标签--%>
 <p>上传图片</p>
 <form name="form1" action="/manage/product/upload.do" method="post" enctype="multipart/form-data">

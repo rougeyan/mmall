@@ -44,16 +44,22 @@ public class UserController {
      */
     @RequestMapping(value = "login.do", method = RequestMethod.POST)
     @ResponseBody
-    public ServiceResponse<User> login(String username, String password, HttpSession session){
+    public ServiceResponse<User> login(String username,
+                                       String password,
+                                       HttpSession session,
+                                       HttpServletRequest httpServletRequest,
+                                       HttpServletResponse httpServletResponse
+                                       ){
         // 流程
         //service -->mybatis --> dao
 
+
         ServiceResponse<User> response = iUserService.login(username,password);
         if(response.isSuccess()){
-            System.out.println(session.getId());
-            // 83775F71478D662C0A65D05374358296
-//             redisUtil.setEx(session.getId(),response.getData().toString(),15, TimeUnit.SECONDS);
-            session.setAttribute(Const.CURRENT_USER,response.getData());
+            // 写入redis里面登录缓存;
+            redisUtil.set(username,response.getData(),30*60);
+            // 写入客户端cookie;
+            CookieUtils.setCookie(httpServletRequest,httpServletResponse,"access_token","admin",30*60);
         }
         return response;
     }
@@ -70,14 +76,6 @@ public class UserController {
         return ServiceResponse.createBySuccessMessage("登出成功");
     }
 
-    // 组合assembleSessionId
-    private String assembleSessionId(User user){
-        String userName = user.getUsername();
-        String dateTime = String.valueOf(DateTimeUtil.getCurrentHourTime().getTime());
-        String assembleString = new StringBuilder().append(userName).append("%").append(dateTime).append("*").toString();
-        String assembleSessionId = MD5Util.MD5EncodeUtf8(assembleString);
-        return assembleSessionId;
-    }
     /**
      * 注册接口;
      * 如果不传user
@@ -106,15 +104,11 @@ public class UserController {
      */
     @RequestMapping(value ="get_user_info.do",method = RequestMethod.GET)
     @ResponseBody()
-    public ServiceResponse<User> getUserInfo(HttpSession session,String session_id){
-//         这里就是通过获取session_id 来判定是否已登陆;
-//        User redisuser = (User)checkLoginStatus.check_token_valid(session_id);
-//
-//        if(redisuser != null){
-//            return ServiceResponse.createBySuccess(redisuser);
-//        }
+    public ServiceResponse<User> getUserInfo(HttpSession session,
+                                             String access_token){
+        User user = (User)redisUtil.get(access_token);
+//        User user = (User) session.getAttribute(Const.CURRENT_USER);
 
-        User user = (User) session.getAttribute(Const.CURRENT_USER);
         // 空判断
         if(user != null){
             return ServiceResponse.createBySuccess(user);

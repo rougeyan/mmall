@@ -1,5 +1,7 @@
 package com.mmall.util;
 
+import org.springframework.stereotype.Component;
+
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -12,7 +14,13 @@ import java.net.URLEncoder;
  *
  * Cookie 工具类
  *
+ * [java.lang.IllegalArgumentException: An invalid domain [.test.com] was specified for this cookie解决方法]
+ * (https://www.cnblogs.com/zhjh256/p/10099668.html)
+ *
+ * [An invalid domain [.xxx.com] was specified for this cookie异常解决](https://msd.misuland.com/pd/2884250171976191700)
+ *
  */
+@Component
 public final class CookieUtils {
 
     /**
@@ -154,6 +162,7 @@ public final class CookieUtils {
                 }
             }
             cookie.setPath("/");
+            cookie.setHttpOnly(true);
             response.addCookie(cookie);
         } catch (Exception e) {
             e.printStackTrace();
@@ -184,6 +193,7 @@ public final class CookieUtils {
                 }
             }
             cookie.setPath("/");
+            cookie.setHttpOnly(true);
             response.addCookie(cookie);
         } catch (Exception e) {
             e.printStackTrace();
@@ -206,12 +216,19 @@ public final class CookieUtils {
             serverName = serverName.substring(0, end);
             final String[] domains = serverName.split("\\.");
             int len = domains.length;
+            // 这里注意tomcat在不同版本会出现报错
+            // An invalid domain [.xxx.com] was specified for this cookie异常解决
+
             if (len > 3) {
                 // www.xxx.com.cn
-                domainName = "." + domains[len - 3] + "." + domains[len - 2] + "." + domains[len - 1];
+//                domainName = "." + domains[len - 3] + "." + domains[len - 2] + "." + domains[len - 1];
+                // tomcat 8.5版本使用Rfc6265CookieProcessor 规则
+                domainName = domains[len - 3] + "." + domains[len - 2] + "." + domains[len - 1];
             } else if (len <= 3 && len > 1) {
                 // xxx.com or xxx.cn
                 domainName = "." + domains[len - 2] + "." + domains[len - 1];
+                // tomcat 8.5版本使用Rfc6265CookieProcessor 规则
+                domainName = domains[len - 2] + "." + domains[len - 1];
             } else {
                 domainName = serverName;
             }

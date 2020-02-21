@@ -19,7 +19,6 @@ import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 
 @Controller
 @RequestMapping("/test/")
@@ -65,10 +64,7 @@ public class TestController {
         mappe.put("key4set",testSet);
         mappe.put("key5obj",orderItem);
 //        redisUtil.hmset("mappe",mappe,600);
-        String redisName = "test60times";
-        String redisValue = "1234";
-//        redisUtil.set(redisName,redisValue);
-//        redisUtil.expire(redisName,30L,TimeUnit.SECONDS);
+        redisUtil.set("mappe","1234",60);
 
         Cookie cookie = new Cookie("ihavesomecookies","1234444444");
         cookie.setMaxAge(20);//最大有效时间

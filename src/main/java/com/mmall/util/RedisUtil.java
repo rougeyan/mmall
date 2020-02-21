@@ -1,6 +1,7 @@
 package com.mmall.util;
 
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
@@ -12,7 +13,11 @@ import java.util.concurrent.TimeUnit;
  * redisTemplate封装
  *
  *  @author yinxp@dist.com.cn
+ *
+ *  [其他] https://www.cnblogs.com/biehongli/p/10096627.html
  */
+// 交给Spring管理(在需要缓存的地方自动注入即可使用)
+@Component
 public class RedisUtil {
     private RedisTemplate<String, Object> redisTemplate;
 
