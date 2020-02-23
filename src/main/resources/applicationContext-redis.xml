@@ -31,7 +31,6 @@
     <!-- redis连接工厂 -->
     <bean id="connectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
         <property name="poolConfig" ref="jedisPoolConfig"/>
-
         <property name="hostName" value="${redis.host}"/>
         <property name="port" value="${redis.port}"/>
         <property name="password" value="${redis.password}"/>
@@ -80,9 +79,11 @@
         <constructor-arg ref="redisTemplate"/>
     </bean>
 
-    <bean id="checkLoginStatus" class="com.mmall.common.CheckLoginStatus">
-        <constructor-arg ref="redisUtil"/>
-    </bean>
+    <bean id="loginFilter" class="com.mmall.controller.common.SessionExpireFilter"></bean>
+
+    <!--<bean id="checkLoginStatus" class="com.mmall.common.CheckLoginStatus">-->
+        <!--<constructor-arg ref="redisUtil"/>-->
+    <!--</bean>-->
 
     <!--这个是使用@cacheable注解 来完成 参考[SSM框架整合Redis详解](https://blog.csdn.net/Mr_FLM/article/details/86506389)-->
     <!--<bean id="cacheManager" class="org.springframework.data.redis.cache.RedisCacheManager">-->

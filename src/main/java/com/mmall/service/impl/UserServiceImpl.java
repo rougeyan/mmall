@@ -33,7 +33,7 @@ public class UserServiceImpl implements IUserService {
             return ServiceResponse.createByErrorMessage("账号或者密码错误");
         }
         // 设置为空
-        user.setId(null);
+//        user.setId(null);
         return ServiceResponse.createBySuccess("登录成功",user);
     }
 

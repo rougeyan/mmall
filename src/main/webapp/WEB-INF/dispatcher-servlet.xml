@@ -30,6 +30,19 @@
         </mvc:message-converters>
     </mvc:annotation-driven>
 
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <!--manage/a.do-->
+            <!--manage/b.do-->
+            <!--manage/product/save.do-->
+            <!--manage/order/detail.do-->
+            <mvc:mapping path="/manage/**"/>
+            <mvc:exclude-mapping path="/manage/user/login.do"/>
+            <bean class="com.mmall.controller.common.interceptor.AuthorityInterceptor"/>
+
+        </mvc:interceptor>
+    </mvc:interceptors>
+
 
 
     <!-- 文件上传 -->

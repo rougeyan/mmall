@@ -18,6 +18,7 @@
     <!--配置datasource xml-->
     <import resource="applicationContext-datasource.xml"/>
     <import resource="applicationContext-redis.xml"/>
+    <bean id="myFilter" class="com.mmall.controller.common.SessionExpireFilter"></bean>
 
 
 </beans>

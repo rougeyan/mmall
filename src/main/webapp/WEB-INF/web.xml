@@ -18,10 +18,28 @@
             <param-value>true</param-value>
         </init-param>
     </filter>
-    <!--拦截路径-->
+
+    <filter>
+        <filter-name>loginFilter</filter-name>
+        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+        <init-param>
+            <param-name>targetFilterLifecycle</param-name>
+            <param-value>true</param-value>
+        </init-param>
+        <!--&lt;!&ndash;设置放行的请求&ndash;&gt;-->
+        <!--<init-param>-->
+            <!--<param-name>excludedPages</param-name>-->
+            <!--<param-value>/admin/login.do</param-value>-->
+        <!--</init-param>-->
+    </filter>
+    <!--过滤器拦截路径-->
     <filter-mapping>
         <filter-name>characterEncodingFilter</filter-name>
         <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>loginFilter</filter-name>
+        <url-pattern>*.do</url-pattern>
     </filter-mapping>
 
     <!--web容器监听器-->
