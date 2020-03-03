@@ -30,17 +30,18 @@ public class OrderManageController {
     public ServiceResponse<PageInfo> orderList(HttpSession session,
                                                @RequestParam(value ="pageNum",defaultValue = "1") int pageNum,
                                                @RequestParam(value ="pageSize",defaultValue = "10") int pageSize){
-        User user = (User)session.getAttribute(Const.CURRENT_USER);
-        if(user == null){
-            return  ServiceResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),"用户未登录,请登录");
-        }
-        // 校验一下是否是管理员
-        if(iUserService.checkAdminRole(user).isSuccess()){
-            // 填充业务员逻辑;
-            return iOrderService.manageList(pageNum,pageSize);
-        }else{
-            return ServiceResponse.createByErrorMessage("无权限操作,需要管理员权限");
-        }
+//        User user = (User)session.getAttribute(Const.CURRENT_USER);
+//        if(user == null){
+//            return  ServiceResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),"用户未登录,请登录");
+//        }
+//        // 校验一下是否是管理员
+//        if(iUserService.checkAdminRole(user).isSuccess()){
+//            // 填充业务员逻辑;
+//
+//        }else{
+//            return ServiceResponse.createByErrorMessage("无权限操作,需要管理员权限");
+//        }
+        return iOrderService.manageList(pageNum,pageSize);
     }
 
     // backend
@@ -48,17 +49,17 @@ public class OrderManageController {
     @RequestMapping("detail.do")
     @ResponseBody
     public ServiceResponse<OrderVo> orderDetail(HttpSession session, Long orderNo){
-        User user = (User)session.getAttribute(Const.CURRENT_USER);
-        if(user == null){
-            return  ServiceResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),"用户未登录,请登录");
-        }
-        // 校验一下是否是管理员
-        if(iUserService.checkAdminRole(user).isSuccess()){
-            // 填充业务员逻辑;
-            return  iOrderService.manageDetail(orderNo);
-        }else{
-            return ServiceResponse.createByErrorMessage("无权限操作,需要管理员权限");
-        }
+//        User user = (User)session.getAttribute(Const.CURRENT_USER);
+//        if(user == null){
+//            return  ServiceResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),"用户未登录,请登录");
+//        }
+//        // 校验一下是否是管理员
+//        if(iUserService.checkAdminRole(user).isSuccess()){
+//            // 填充业务员逻辑;
+//        }else{
+//            return ServiceResponse.createByErrorMessage("无权限操作,需要管理员权限");
+//        }
+        return  iOrderService.manageDetail(orderNo);
     }
     //  一期是暂时为了精确匹配
     // 针对二期作多条件耦合的模糊匹配查询(分页)
@@ -68,33 +69,34 @@ public class OrderManageController {
                                                  Long orderNo,
                                                  @RequestParam(value ="pageNum",defaultValue = "1") int pageNum,
                                                  @RequestParam(value ="pageSize",defaultValue = "10") int pageSize){
-        User user = (User)session.getAttribute(Const.CURRENT_USER);
-        if(user == null){
-            return  ServiceResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),"用户未登录,请登录");
-        }
-        // 校验一下是否是管理员
-        if(iUserService.checkAdminRole(user).isSuccess()){
-            // 填充业务员逻辑;
-            return iOrderService.manageSearch(orderNo,pageNum,pageSize);
-        }else{
-            return ServiceResponse.createByErrorMessage("无权限操作,需要管理员权限");
-        }
+//        User user = (User)session.getAttribute(Const.CURRENT_USER);
+//        if(user == null){
+//            return  ServiceResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),"用户未登录,请登录");
+//        }
+//        // 校验一下是否是管理员
+//        if(iUserService.checkAdminRole(user).isSuccess()){
+//            // 填充业务员逻辑;
+//
+//        }else{
+//            return ServiceResponse.createByErrorMessage("无权限操作,需要管理员权限");
+//        }
+        return iOrderService.manageSearch(orderNo,pageNum,pageSize);
     }
     
     @RequestMapping("send_goods.do")
     @ResponseBody
     public ServiceResponse<String> orderSendGoods(HttpSession session, Long orderNo){
-        User user = (User)session.getAttribute(Const.CURRENT_USER);
-        if(user == null){
-            return  ServiceResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),"用户未登录,请登录");
-        }
-        // 校验一下是否是管理员
-        if(iUserService.checkAdminRole(user).isSuccess()){
-            // 填充业务员逻辑;
-            return  iOrderService.manageSendGoods(orderNo);
-        }else{
-            return ServiceResponse.createByErrorMessage("无权限操作,需要管理员权限");
-        }
+//        User user = (User)session.getAttribute(Const.CURRENT_USER);
+//        if(user == null){
+//            return  ServiceResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),"用户未登录,请登录");
+//        }
+//        // 校验一下是否是管理员
+//        if(iUserService.checkAdminRole(user).isSuccess()){
+//            // 填充业务员逻辑;
+//        }else{
+//            return ServiceResponse.createByErrorMessage("无权限操作,需要管理员权限");
+//        }
+        return  iOrderService.manageSendGoods(orderNo);
     }
 
 

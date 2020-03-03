@@ -7,6 +7,7 @@ import com.mmall.common.ServiceResponse;
 import com.mmall.pojo.Shipping;
 import com.mmall.pojo.User;
 import com.mmall.service.IShippingService;
+import com.mmall.util.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,19 +24,21 @@ import javax.servlet.http.HttpSession;
 public class ShippingController {
     @Autowired
     private IShippingService iShippingService;
+    @Autowired
+    private RedisUtil redisUtil;
 
     /**
      * srpingmvc的对象绑定
      * 不用一个一个数据绑定;
-     * 需要在mapper里面配合使用
+     * 需要在mapper里面配合使用11
      * @param session
      * @param shipping
      * @return
      */
     @RequestMapping("add.do")
     @ResponseBody
-    public ServiceResponse add(HttpSession session, Shipping shipping){
-        User user = (User) session.getAttribute(Const.CURRENT_USER);
+    public ServiceResponse add(String access_token, Shipping shipping){
+        User user = (User)redisUtil.get(access_token);
         // 空判断 强制登录
         if(user == null){
             return ServiceResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());
@@ -45,8 +48,8 @@ public class ShippingController {
 
     @RequestMapping("del.do")
     @ResponseBody
-    public ServiceResponse del(HttpSession session, Integer shippingId){
-        User user = (User) session.getAttribute(Const.CURRENT_USER);
+    public ServiceResponse del(String access_token, Integer shippingId){
+        User user = (User)redisUtil.get(access_token);
         // 空判断 强制登录
         if(user == null){
             return ServiceResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());
@@ -56,8 +59,8 @@ public class ShippingController {
 
     @RequestMapping("update.do")
     @ResponseBody
-    public ServiceResponse update(HttpSession session, Shipping shipping){
-        User user = (User) session.getAttribute(Const.CURRENT_USER);
+    public ServiceResponse update(String access_token, Shipping shipping){
+        User user = (User)redisUtil.get(access_token);
         // 空判断 强制登录
         if(user == null){
             return ServiceResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());
@@ -68,8 +71,8 @@ public class ShippingController {
 
     @RequestMapping("select.do")
     @ResponseBody
-    public ServiceResponse select(HttpSession session, Integer shippingId){
-        User user = (User) session.getAttribute(Const.CURRENT_USER);
+    public ServiceResponse select(String access_token, Integer shippingId){
+        User user = (User)redisUtil.get(access_token);
         // 空判断 强制登录
         if(user == null){
             return ServiceResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());
@@ -79,10 +82,10 @@ public class ShippingController {
 
     @RequestMapping("list.do")
     @ResponseBody
-    public ServiceResponse<PageInfo> list(HttpSession session,
+    public ServiceResponse<PageInfo> list(String access_token,
                                           @RequestParam(value = "pageNum",defaultValue = "1") int pageNum,
                                           @RequestParam(value = "pageSize",defaultValue = "10") int pageSize){
-        User user = (User) session.getAttribute(Const.CURRENT_USER);
+        User user = (User)redisUtil.get(access_token);
         // 空判断 强制登录
         if(user == null){
             return ServiceResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());

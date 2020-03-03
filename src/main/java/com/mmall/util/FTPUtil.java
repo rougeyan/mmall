@@ -27,6 +27,8 @@ public class FTPUtil {
         this.pwd = pwd;
     }
     public static boolean uploadFile(List<File> fileList) throws IOException {
+        // uploadFile 静态方法块里面常见了一个FTPUtil对象
+
         FTPUtil ftpUtil = new FTPUtil(ftpIp,21,ftpUser,ftpPass);
         logger.info("开始连接ftp服务器");
         boolean result = ftpUtil.uploadFile("img",fileList);
@@ -34,16 +36,28 @@ public class FTPUtil {
         return result;
     }
 
-
+    /**
+     * ftpUtil.uploadFile 方法里面有步骤和流程
+     * 1.链接ftp服务器;
+     * 2.
+     */
+    /**
+     *
+     * @param remotePath 指定上传路径; 相当于linux 的cd
+     * @param fileList 上传文件列表;
+     * @return
+     * @throws IOException
+     */
     private boolean uploadFile(String remotePath,List<File> fileList) throws IOException {
         boolean uploaded = true;
         FileInputStream fis = null;
         //连接FTP服务器
+        // 这里的this指向已经是之前创建的 new FTPUtil;
         if(connectServer(this.ip,this.port,this.user,this.pwd)){
             try {
-                ftpClient.changeWorkingDirectory(remotePath);
-                ftpClient.setBufferSize(1024);
-                ftpClient.setControlEncoding("UTF-8");
+                ftpClient.changeWorkingDirectory(remotePath); // 路径
+                ftpClient.setBufferSize(1024); // 设置每次读取文件流时缓存数组的大小
+                ftpClient.setControlEncoding("UTF-8"); //
                 ftpClient.setFileType(FTPClient.BINARY_FILE_TYPE);
                 ftpClient.enterLocalPassiveMode();
                 for(File fileItem : fileList){

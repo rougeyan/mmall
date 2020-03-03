@@ -4,6 +4,8 @@ import com.mmall.common.Const;
 import com.mmall.common.ServiceResponse;
 import com.mmall.pojo.User;
 import com.mmall.service.IUserService;
+import com.mmall.util.CookieUtils;
+import com.mmall.util.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
@@ -11,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 /**
@@ -21,20 +25,27 @@ import javax.servlet.http.HttpSession;
 public class UserManageController {
     @Autowired
     private IUserService iUserService;
+    @Autowired
+    private RedisUtil redisUtil;
 
     @RequestMapping(value = "login.do", method = RequestMethod.POST)
     @ResponseBody()
-    public ServiceResponse<User> login(String username, String password, HttpSession session){
-        // 流程
-        //service -->mybatis --> dao
+    public ServiceResponse<User> login(String username,
+                                       String password,
+                                       HttpServletRequest httpServletRequest,
+                                       HttpServletResponse httpServletResponse,
+                                       String access_token){
+
+        User user = (User)redisUtil.get(access_token);
+        if(user!= null){
+            return ServiceResponse.createBySuccess("已经登录",user);
+        }
         ServiceResponse<User> response = iUserService.login(username,password);
         if(response.isSuccess()){
-            User user = response.getData();
-            if(user.getRole() == Const.Role.Role_ADMIN){
-                session.setAttribute(Const.CURRENT_USER,user);
-            }else{
-                return ServiceResponse.createByErrorMessage("不是管理员无法登录");
-            }
+            // 写入redis里面登录缓存;
+            redisUtil.set(username,response.getData(),30*60);
+            // 写入客户端cookie;
+            CookieUtils.setCookie(httpServletRequest,httpServletResponse,"access_token","admin",30*60);
         }
         return response;
     }

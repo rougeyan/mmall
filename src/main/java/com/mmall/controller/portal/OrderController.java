@@ -11,6 +11,7 @@ import com.mmall.pojo.User;
 import com.mmall.service.ICategoryService;
 import com.mmall.service.IOrderService;
 import com.mmall.util.PropertiesUtil;
+import com.mmall.util.RedisUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,13 +33,15 @@ public class OrderController {
 
     @Autowired
     private IOrderService iOrderService;
+    @Autowired
+    private RedisUtil redisUtil;
 
     // 创建订单
     //  在order里面都有一个pay接口
     @RequestMapping("create.do")
     @ResponseBody
-    public ServiceResponse create(HttpSession session, Integer shippingId){
-        User user = (User) session.getAttribute(Const.CURRENT_USER);
+    public ServiceResponse create(String access_token, Integer shippingId){
+        User user = (User)redisUtil.get(access_token);
         if(user == null){
             return ServiceResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());
         }
@@ -49,8 +52,8 @@ public class OrderController {
     //  在order里面都有一个pay接口
     @RequestMapping("cancel.do")
     @ResponseBody
-    public ServiceResponse cancel(HttpSession session, Long orderNo){
-        User user = (User) session.getAttribute(Const.CURRENT_USER);
+    public ServiceResponse cancel(String access_token, Long orderNo){
+        User user = (User)redisUtil.get(access_token);
         if(user == null){
             return ServiceResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());
         }
@@ -62,8 +65,8 @@ public class OrderController {
     // 获取已经选中的购物车产品列表;
     @RequestMapping("get_order_cart_product.do")
     @ResponseBody
-    public ServiceResponse getOrderCartProduct(HttpSession session){
-        User user = (User) session.getAttribute(Const.CURRENT_USER);
+    public ServiceResponse getOrderCartProduct(String access_token){
+        User user = (User)redisUtil.get(access_token);
         if(user == null){
             return ServiceResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());
         }
@@ -73,8 +76,8 @@ public class OrderController {
 
     @RequestMapping("detail.do")
     @ResponseBody
-    public ServiceResponse detail(HttpSession session, Long orderNo){
-        User user = (User) session.getAttribute(Const.CURRENT_USER);
+    public ServiceResponse detail(String access_token, Long orderNo){
+        User user = (User)redisUtil.get(access_token);
         if(user == null){
             return ServiceResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());
         }
@@ -83,10 +86,10 @@ public class OrderController {
 
     @RequestMapping("list.do")
     @ResponseBody
-    public ServiceResponse list(HttpSession session,
+    public ServiceResponse list(String access_token,
                                 @RequestParam(value="pageNum",defaultValue = "1") int pageNum,
                                 @RequestParam(value="pageSize",defaultValue = "10") int pageSize){
-        User user = (User) session.getAttribute(Const.CURRENT_USER);
+        User user = (User)redisUtil.get(access_token);
         if(user == null){
             return ServiceResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());
         }
@@ -113,7 +116,7 @@ public class OrderController {
     //  在order里面都有一个pay接口
     @RequestMapping("pay.do")
     @ResponseBody
-    public ServiceResponse pay(HttpSession session, Long orderNo , HttpServletRequest requset){
+    public ServiceResponse pay(String access_token, Long orderNo , HttpServletRequest requset){
         // requset 获取servlet 的上下文
         // 拿到upload的文件夹
         // 拿到自动生产的二维码
@@ -121,7 +124,7 @@ public class OrderController {
         // 返回给前端 二维码的图片地址
         // 前端吧图片地址给展示
         // 前端 => 扫码支付;
-        User user = (User) session.getAttribute(Const.CURRENT_USER);
+        User user = (User)redisUtil.get(access_token);
         // 空判断 强制登录
         if(user == null){
             return ServiceResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());
@@ -189,8 +192,8 @@ public class OrderController {
 
     @RequestMapping("query_order_pay_status.do")
     @ResponseBody
-    public ServiceResponse<Boolean> pay(HttpSession session, Long orderNo){
-        User user = (User) session.getAttribute(Const.CURRENT_USER);
+    public ServiceResponse<Boolean> pay(String access_token, Long orderNo){
+        User user = (User)redisUtil.get(access_token);
         // 空判断 强制登录
         if(user == null){
             return ServiceResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());

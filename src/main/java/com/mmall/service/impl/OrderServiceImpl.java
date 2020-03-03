@@ -62,6 +62,8 @@ public class OrderServiceImpl implements IOrderService {
     @Autowired
     private ShippingMapper shippingMapper;
 
+    // ==================== 前台接口 ================
+
     //API - 创建订单(userId, 联系地址id)
     public ServiceResponse createOrder(Integer userId, Integer shippingId){
         // 从购物车获取数据
@@ -113,6 +115,7 @@ public class OrderServiceImpl implements IOrderService {
         return ServiceResponse.createBySuccess(orderVo);
     }
 
+    // 组合 视图View订单对象
     private OrderVo assembleOrderVo(Order order, List<OrderItem> orderItemList){
         OrderVo orderVo = new OrderVo();
         orderVo.setOrderNo(order.getOrderNo()); // 订单号
@@ -154,6 +157,7 @@ public class OrderServiceImpl implements IOrderService {
 
     }
 
+    // 组合 视图View 订单明细List 对象;
     private OrderItemVo assembleOrderItemVo(OrderItem orderItem){
         OrderItemVo orderItemVo = new OrderItemVo();
         orderItemVo.setOrderNo(orderItem.getOrderNo());
@@ -197,7 +201,9 @@ public class OrderServiceImpl implements IOrderService {
             productMapper.updateByPrimaryKeySelective(product);
         }
     }
-    // 组装订单
+
+
+    // 组装Order订单对象 存入到数据库里面;
     private Order assembleOrder(Integer userId, Integer shipping,BigDecimal payment){
         // 生成订单号
         Order order = new Order();
@@ -240,7 +246,7 @@ public class OrderServiceImpl implements IOrderService {
         return payment;
     }
 
-    // 获取整个订单明细;
+    // 获取整个订单明细  List<OrderItem>;
     private ServiceResponse<List<OrderItem>> getCartOrderItem(Integer userId, List<Cart> cartList){
         List<OrderItem> orderItemList = Lists.newArrayList();
         // 若购物车数据为空 返回错误信息;
@@ -300,8 +306,7 @@ public class OrderServiceImpl implements IOrderService {
     }
 
 
-    // API - 获取勾选的商品详情
-
+    // API - 获取预下单订单商品详情(即 别被勾选的订单信息  (在选择收货人的页面显示)=> 此时未创建订单)
     public ServiceResponse getOrderCartProduct(Integer userId){
         OrderProductVo orderProductVo = new OrderProductVo();
         // 从购物车中获取数据;
@@ -369,6 +374,16 @@ public class OrderServiceImpl implements IOrderService {
         return orderVoList;
     }
 
+
+
+
+
+
+
+
+
+
+    // =================== 后台接口 ================
 
     // 后台: API - 订单详情 (带分页)
 

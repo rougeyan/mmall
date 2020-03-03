@@ -16,7 +16,8 @@ import java.util.UUID;
 public class FileServiceImpl implements IFileService {
 
     private Logger logger = LoggerFactory.getLogger(FileServiceImpl.class);
-
+    // service 同时上传多个文件;
+//    MultipartFile[] file
     public String upload(MultipartFile file, String path){
         String fileName  = file.getOriginalFilename();
         // 获取扩展名

@@ -5,6 +5,7 @@ import com.mmall.common.ResponseCode;
 import com.mmall.common.ServiceResponse;
 import com.mmall.pojo.User;
 import com.mmall.service.ICartService;
+import com.mmall.util.RedisUtil;
 import com.mmall.vo.CartVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,14 +19,16 @@ import javax.servlet.http.HttpSession;
 public class CartController {
     @Autowired
     private ICartService iCartService;
+    @Autowired
+    private RedisUtil redisUtil;
 
     /**
      *
      */
     @RequestMapping("list.do")
     @ResponseBody
-    public ServiceResponse<CartVo> add(HttpSession session){
-        User user = (User) session.getAttribute(Const.CURRENT_USER);
+    public ServiceResponse<CartVo> add(String access_token){
+        User user = (User)redisUtil.get(access_token);
         // 空判断 强制登录
         if(user == null){
             return ServiceResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());
@@ -41,8 +44,8 @@ public class CartController {
      */
     @RequestMapping("add.do")
     @ResponseBody
-    public ServiceResponse<CartVo> add(HttpSession session, Integer count, Integer productId){
-        User user = (User) session.getAttribute(Const.CURRENT_USER);
+    public ServiceResponse<CartVo> add(String access_token, Integer count, Integer productId){
+        User user = (User)redisUtil.get(access_token);
         // 空判断 强制登录
         if(user == null){
             return ServiceResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());
@@ -56,8 +59,8 @@ public class CartController {
      */
     @RequestMapping("update.do")
     @ResponseBody
-    public ServiceResponse<CartVo> update(HttpSession session, Integer count, Integer productId){
-        User user = (User) session.getAttribute(Const.CURRENT_USER);
+    public ServiceResponse<CartVo> update(String access_token, Integer count, Integer productId){
+        User user = (User)redisUtil.get(access_token);
         // 空判断 强制登录
         if(user == null){
             return ServiceResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());
@@ -72,8 +75,8 @@ public class CartController {
      */
     @RequestMapping("delete_product.do")
     @ResponseBody
-    public ServiceResponse<CartVo> deleteProduct(HttpSession session,String productIds){
-        User user = (User) session.getAttribute(Const.CURRENT_USER);
+    public ServiceResponse<CartVo> deleteProduct(String access_token,String productIds){
+        User user = (User)redisUtil.get(access_token);
         // 空判断 强制登录
         if(user == null){
             return ServiceResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());
@@ -86,8 +89,8 @@ public class CartController {
     // 全选
     @RequestMapping("select_all.do")
     @ResponseBody
-    public ServiceResponse<CartVo> selectAll(HttpSession session){
-        User user = (User) session.getAttribute(Const.CURRENT_USER);
+    public ServiceResponse<CartVo> selectAll(String access_token){
+        User user = (User)redisUtil.get(access_token);
         // 空判断 强制登录
         if(user == null){
             return ServiceResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());
@@ -97,8 +100,8 @@ public class CartController {
     // 全反选
     @RequestMapping("unselect_all.do")
     @ResponseBody
-    public ServiceResponse<CartVo> unSelectAll(HttpSession session){
-        User user = (User) session.getAttribute(Const.CURRENT_USER);
+    public ServiceResponse<CartVo> unSelectAll(String access_token){
+        User user = (User)redisUtil.get(access_token);
         // 空判断 强制登录
         if(user == null){
             return ServiceResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());
@@ -110,8 +113,8 @@ public class CartController {
     // 单选
     @RequestMapping("select.do")
     @ResponseBody
-    public ServiceResponse<CartVo> select(HttpSession session,Integer productId){
-        User user = (User) session.getAttribute(Const.CURRENT_USER);
+    public ServiceResponse<CartVo> select(String access_token,Integer productId){
+        User user = (User)redisUtil.get(access_token);
         // 空判断 强制登录
         if(user == null){
             return ServiceResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());
@@ -121,8 +124,8 @@ public class CartController {
     // 单反选
     @RequestMapping("unselect.do")
     @ResponseBody
-    public ServiceResponse<CartVo> unSelectAll(HttpSession session,Integer productId){
-        User user = (User) session.getAttribute(Const.CURRENT_USER);
+    public ServiceResponse<CartVo> unSelectAll(String access_token,Integer productId){
+        User user = (User)redisUtil.get(access_token);
         // 空判断 强制登录
         if(user == null){
             return ServiceResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());
@@ -134,8 +137,8 @@ public class CartController {
     // 查询当前用户购物车里面的产品数量; 如果一个产品有10个 ,name这里数量就是10 (通用电商做法
     @RequestMapping("get_cart_product_count.do")
     @ResponseBody
-    public ServiceResponse<Integer> getCartProductCount(HttpSession session){
-        User user = (User) session.getAttribute(Const.CURRENT_USER);
+    public ServiceResponse<Integer> getCartProductCount(String access_token){
+        User user = (User)redisUtil.get(access_token);
         // 空判断 强制登录
         if(user == null){
             return ServiceResponse.createBySuccess(0);
