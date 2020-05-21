@@ -3,18 +3,19 @@ package com.mmall.controller.common;
 import com.mmall.pojo.User;
 import com.mmall.util.CookieUtils;
 import com.mmall.util.RedisUtil;
-import javafx.application.Application;
+// import javafx.application.Application;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.web.context.support.WebApplicationContextUtils;
+// import org.springframework.stereotype.Component;
+// import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-//这个是针对controller影响的包
+// 这个是针对controller影响的包
+// 过滤器filter
 // 这个是servlet 的过滤器
 
 /**

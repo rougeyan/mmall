@@ -66,6 +66,7 @@ public class AuthorityInterceptor implements HandlerInterceptor {
             response.setContentType("application/json;charset=UTF-8"); // 这里要设置返回值类型
             PrintWriter out = response.getWriter();
 
+            // todo something
             // 这里需要转一次json;
             if(user == null){
                 out.print(ServiceResponse.createByErrorMessage("拦截器拦截,用户未登录"));
