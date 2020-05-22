@@ -3,6 +3,8 @@
         PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
         "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
 
+<!--generatorConfig.xml 文件是为了mybatis插件自动生成pojo类, dao接口,和mapper.xml的配置文件 -->
+
 <generatorConfiguration>
     <!--导入属性配置-->
     <properties resource="datasource.properties"></properties>
