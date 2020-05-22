@@ -4,12 +4,12 @@
         "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
 
 <!--generatorConfig.xml 文件是为了mybatis插件自动生成pojo类, dao接口,和mapper.xml的配置文件 -->
-
+<!--[generatorConfiguration配置文件及其详细解读](https://www.cnblogs.com/jpfss/p/7561669.html)-->
 <generatorConfiguration>
     <!--导入属性配置-->
     <properties resource="datasource.properties"></properties>
 
-    <!--指定特定数据库的jdbc驱动jar包的位置,若不指定的话??maven 引入-->
+    <!--指定数据连接驱动jar地址, 单次创建有效;-->
     <classPathEntry location="mysql-connector-java-8.0.18.jar"/>
 
     <context id="default" targetRuntime="MyBatis3">

@@ -381,19 +381,19 @@
         <activeByDefault>true</activeByDefault>
       </activation>
       <properties>
-        <delpoy.type>dev</delpoy.type>
+        <deploy.type>dev</deploy.type>
       </properties>
     </profile>
     <profile>
       <id>beta</id>
       <properties>
-        <delpoy.type>beta</delpoy.type>
+        <deploy.type>beta</deploy.type>
       </properties>
     </profile>
     <profile>
       <id>prod</id>
       <properties>
-        <delpoy.type>prod</delpoy.type>
+        <deploy.type>prod</deploy.type>
       </properties>
     </profile>
   </profiles>
