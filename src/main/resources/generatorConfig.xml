@@ -5,6 +5,10 @@
 
 <!--generatorConfig.xml 文件是为了mybatis插件自动生成pojo类, dao接口,和mapper.xml的配置文件 -->
 <!--[generatorConfiguration配置文件及其详细解读](https://www.cnblogs.com/jpfss/p/7561669.html)-->
+<!--
+    配置generatorConfig.xml文件，为需要自动生成三种文件的表添加配置信息（实体表名对应：tableName 表名 domain Object Name
+    类名）；运行插件即可生成相应的pojo类，dao接口和mapper.xml文件
+-->
 <generatorConfiguration>
     <!--导入属性配置-->
     <properties resource="datasource.properties"></properties>

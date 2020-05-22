@@ -24,11 +24,18 @@
   </properties>
 
   <dependencies>
+    <!--避免各个环境的tomcat版本差异 不使用tomcat-servlet-api-->
 
+    <!--<dependency>-->
+      <!--<groupId>org.apache.tomcat</groupId>-->
+      <!--<artifactId>tomcat-servlet-api</artifactId>-->
+      <!--<version>9.0.24</version>-->
+    <!--</dependency>-->
     <dependency>
-      <groupId>org.apache.tomcat</groupId>
-      <artifactId>tomcat-servlet-api</artifactId>
-      <version>9.0.24</version>
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
+      <version>4.0.1</version>
+      <scope>provided</scope>
     </dependency>
 
     <dependency>
@@ -85,7 +92,7 @@
       <version>1.9.3</version>
     </dependency>
 
-    <!--json 序列化和反序列化-->
+    <!--序列化和反序列化-->
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-databind</artifactId>
@@ -103,6 +110,13 @@
       <artifactId>jackson-annotations</artifactId>
       <version>2.9.10</version>
       <!--<type>bundle</type>-->
+    </dependency>
+
+    <!-- fastjson -->
+    <dependency>
+      <groupId>com.alibaba</groupId>
+      <artifactId>fastjson</artifactId>
+      <version>1.2.68</version>
     </dependency>
 
 
@@ -214,7 +228,7 @@
       <version>5.1.9</version>
     </dependency>
 
-    <!--这是应该是旧的 分页方式-->
+    <!--pagehelper分页插件 旧版本配置 -->
     <!--<dependency>-->
       <!--<groupId>com.github.miemiedev</groupId>-->
       <!--<artifactId>mybatis-paginator</artifactId>-->
@@ -228,10 +242,12 @@
     <!--</dependency>-->
 
 
-    <!--alipay-->
 
     <!-- 查看文档即知道: 以下的包有什么用 https://docs.open.alipay.com/54/104506/-->
     <!-- https://mvnrepository.com/artifact/com.alipay.sdk/alipay-sdk-java -->
+
+    <!-- alipay 支付宝的jar包 使用 web-inf下lib打包; 因为mvn版本上较新 暂不会使用 -->
+
     <!--<dependency>-->
       <!--<groupId>com.alipay.sdk</groupId>-->
       <!--<artifactId>alipay-sdk-java</artifactId>-->

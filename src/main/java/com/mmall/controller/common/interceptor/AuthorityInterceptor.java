@@ -1,5 +1,6 @@
 package com.mmall.controller.common.interceptor;
 
+import com.alibaba.fastjson.JSON;
 import com.mmall.common.Const;
 import com.mmall.common.ServiceResponse;
 import com.mmall.pojo.User;
@@ -18,6 +19,9 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Map;
 
+/**
+ * 拦截器 interceptor 判定登录权限
+ */
 public class AuthorityInterceptor implements HandlerInterceptor {
 
     @Autowired
@@ -67,11 +71,12 @@ public class AuthorityInterceptor implements HandlerInterceptor {
             PrintWriter out = response.getWriter();
 
             // todo something
-            // 这里需要转一次json;
             if(user == null){
-                out.print(ServiceResponse.createByErrorMessage("拦截器拦截,用户未登录"));
+                // 这里需要谁用JsonUtils来转换 ServiceResponse.createByErrorMessage对象, 否则只会输出
+                // com.mmall.common.ServiceResponse@32fc7e30 这样的对象字符串
+                out.print(JSON.toJSONString(ServiceResponse.createByErrorMessage("拦截器拦截,用户未登录")));
             }else{
-                out.print(ServiceResponse.createByErrorMessage("拦截器拦截,非管理员权限"));
+                out.print(JSON.toJSONString(ServiceResponse.createByErrorMessage("拦截器拦截,非管理员权限")));
             }
             out.flush();
             out.close(); // 这里要关闭;

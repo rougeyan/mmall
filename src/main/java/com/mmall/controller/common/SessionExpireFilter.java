@@ -14,15 +14,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-// 这个是针对controller影响的包
-// 过滤器filter
-// 这个是servlet 的过滤器
+// servlet的过滤器: filter
+// 过滤信息并且控制controller是否流转
 
 /**
  * 基于servlet需要注入bean对象;
  *
  * 本过滤器 的目的是:
- * 1.判定是否登录状态;
+ * 1.判定是否登录状态;(部分免登录除外:如产品信息 产品列表)
  * 2.每次操作延长session失效时间;
  *
  */

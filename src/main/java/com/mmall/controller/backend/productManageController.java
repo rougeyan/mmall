@@ -45,17 +45,6 @@ public class productManageController {
     @RequestMapping("save.do")
     @ResponseBody
     public ServiceResponse productSave(HttpSession session, Product product){
-//        User user = (User)session.getAttribute(Const.CURRENT_USER);
-//        if(user == null){
-//            return  ServiceResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),"用户未登录,请登录");
-//        }
-//        // 校验一下是否是管理员
-//        if(iUserService.checkAdminRole(user).isSuccess()){
-//            // 增加产品的业务逻辑
-//            return iProducetService.saveOrUpdateProduct(product);
-//        }else{
-//            return ServiceResponse.createByErrorMessage("无权限操作,需要管理员权限");
-//        }
         return iProducetService.saveOrUpdateProduct(product);
     }
 
@@ -69,34 +58,12 @@ public class productManageController {
     @RequestMapping("set_sale_status.do")
     @ResponseBody
     public ServiceResponse setSaleStatus(HttpSession session, Integer productId,Integer status){
-//        User user = (User)session.getAttribute(Const.CURRENT_USER);
-//        if(user == null){
-//            return  ServiceResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),"用户未登录,请登录");
-//        }
-//        // 校验一下是否是管理员
-//        if(iUserService.checkAdminRole(user).isSuccess()){
-//            return iProducetService.setSaleStatus(productId,status);
-//        }else{
-//            return ServiceResponse.createByErrorMessage("无权限操作,需要管理员权限");
-//        }
         return iProducetService.setSaleStatus(productId,status);
     }
 
     @RequestMapping("detail.do")
     @ResponseBody
     public ServiceResponse getDetail(HttpSession session, Integer productId){
-//        User user = (User)session.getAttribute(Const.CURRENT_USER);
-//        if(user == null){
-//            return  ServiceResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),"用户未登录,请登录");
-//        }
-//        // 校验一下是否是管理员
-//        if(iUserService.checkAdminRole(user).isSuccess()){
-//            // 填充业务;
-//
-//        }else{
-//            return ServiceResponse.createByErrorMessage("无权限操作,需要管理员权限");
-//        }
-
         // properties读取
         // vo的建立;
         return iProducetService.manageProductDetail(productId);

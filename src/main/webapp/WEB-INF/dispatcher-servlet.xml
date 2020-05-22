@@ -38,6 +38,7 @@
             <!--manage/order/detail.do-->
             <mvc:mapping path="/manage/**"/>
             <mvc:exclude-mapping path="/manage/user/login.do"/>
+            <!--拦截器-->
             <bean class="com.mmall.controller.common.interceptor.AuthorityInterceptor"/>
 
         </mvc:interceptor>

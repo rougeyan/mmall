@@ -53,17 +53,6 @@
         <property name="hashKeySerializer">
             <bean class="org.springframework.data.redis.serializer.StringRedisSerializer" />
         </property>
-
-        <!--新增 其他下列两项 从别处-->
-        <!--假如引入这两项回变成二进制-->
-        <!--&lt;!&ndash;处理 value 的序列化和反序列化&ndash;&gt;-->
-        <!--<property name="valueSerializer">-->
-            <!--<bean class="org.springframework.data.redis.serializer.JdkSerializationRedisSerializer"/>-->
-        <!--</property>-->
-        <!--&lt;!&ndash;处理 hash 类型 value 的序列化和反序列化&ndash;&gt;-->
-        <!--<property name="hashValueSerializer">-->
-            <!--<bean class="org.springframework.data.redis.serializer.StringRedisSerializer" />-->
-        <!--</property>-->
     </bean>
 
 
@@ -79,6 +68,7 @@
         <constructor-arg ref="redisTemplate"/>
     </bean>
 
+    <!--为了在servlet可以读取bean对象-->
     <bean id="loginFilter" class="com.mmall.controller.common.SessionExpireFilter"></bean>
 
     <!--<bean id="checkLoginStatus" class="com.mmall.common.CheckLoginStatus">-->
