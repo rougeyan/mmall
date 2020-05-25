@@ -5,6 +5,7 @@ import com.mmall.common.ServiceResponse;
 import com.mmall.pojo.User;
 import com.mmall.service.IUserService;
 import com.mmall.util.CookieUtils;
+import com.mmall.util.MD5Util;
 import com.mmall.util.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -38,14 +39,14 @@ public class UserManageController {
 
         User user = (User)redisUtil.get(access_token);
         if(user!= null){
-            return ServiceResponse.createBySuccess("已经登录",user);
+            return ServiceResponse.createBySuccess("已登录",user);
         }
         ServiceResponse<User> response = iUserService.login(username,password);
         if(response.isSuccess()){
             // 写入redis里面登录缓存;
-            redisUtil.set(username,response.getData(),30*60);
+            redisUtil.set(MD5Util.MD5EncodeUtf8(username),response.getData(),30*60);
             // 写入客户端cookie;
-            CookieUtils.setCookie(httpServletRequest,httpServletResponse,"access_token","admin",30*60);
+            CookieUtils.setCookie(httpServletRequest,httpServletResponse,"access_token",MD5Util.MD5EncodeUtf8(username),30*60);
         }
         return response;
     }

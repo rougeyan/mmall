@@ -35,6 +35,8 @@ public class ProductServiceImpl implements IProducetService {
     @Autowired
     private ICategoryService iCategoryService;
 
+
+    // ============================  后台系统部分 ============================
     /**
      *  新增/ 更新产品
      * @param product
@@ -252,7 +254,6 @@ public class ProductServiceImpl implements IProducetService {
 
 
 
-    // ============================  客户端client部分 ============================
     // ============================  客户端client部分 ============================
 
     /**

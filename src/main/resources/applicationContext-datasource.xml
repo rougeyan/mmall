@@ -58,7 +58,7 @@
         <!--# 检查连接是否有效-->
         <property name="testWhileIdle" value="true"/>
         <!--# 检查连接有效性的SQL语句-->
-        <property name="validationQuery" value="SELECT 1 FROM dual"/>
+        <property name="validationQuery" value="SELECT 1"/>
     </bean>
 
 

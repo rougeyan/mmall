@@ -55,15 +55,15 @@ public class UserController {
         // 如果有access_token的话去判定是否已经登录;
         User user = (User)redisUtil.get(access_token);
         if(user!= null){
-            return ServiceResponse.createBySuccess("已经登录",user);
+            return ServiceResponse.createBySuccess("已登录",user);
         }
         // 否则请求数据库校验登录讯息
         ServiceResponse<User> response = iUserService.login(username,password);
         if(response.isSuccess()){
             // 写入redis里面登录缓存;
-            redisUtil.set(username,response.getData(),30*60);
+            redisUtil.set(MD5Util.MD5EncodeUtf8(username),response.getData(),30*60);
             // 写入客户端cookie;
-            CookieUtils.setCookie(httpServletRequest,httpServletResponse,"access_token","admin",30*60);
+            CookieUtils.setCookie(httpServletRequest,httpServletResponse,"access_token",MD5Util.MD5EncodeUtf8(username),30*60);
         }
         return response;
     }
