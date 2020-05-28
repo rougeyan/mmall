@@ -280,7 +280,7 @@ public class ProductServiceImpl implements IProducetService {
     }
 
     /**
-     * client端: 根据关键字 和categoryId(分类) 进行搜索
+     * client端: 根据关键字和categoryId(分类) 进行搜索
      * 1. 注意这里可能传的是大类
      * @param keyword
      * @param categoryId
@@ -303,19 +303,22 @@ public class ProductServiceImpl implements IProducetService {
         List<Integer> categoryIdList =new ArrayList<Integer>();
 
         // 判定是否有传入具体分类ID
+        // 0 为全局搜索
+        // 10000x 及其他是分类
         if(categoryId != null){
+            // selectByPrimaryKey 是找不到0得
             Category category = categoryMapper.selectByPrimaryKey(categoryId);
-            System.out.println(category.toString());
             // 可能存在不存在此分类 但是又具备关键字;
             if(category == null && StringUtils.isBlank(keyword)){
                 // 没有该分类 还没有关键字, 这时候返回一个空的结果集  但不报错
                 PageHelper.startPage(pageNum,pageSize);
                 List<ProductDetailVo> productDetailVoList = Lists.newArrayList();
                 PageInfo pageInfo = new PageInfo(productDetailVoList);
-                return  ServiceResponse.createBySuccess(pageInfo);
+                return  ServiceResponse.createBySuccess("category参数错误",pageInfo);
             }
             // 根据category 分类ID 去搜 递归下的分类List
             categoryIdList = iCategoryService.selectCategoryAndChildrenById(category.getId()).getData();
+
         }
         // 判定关键字是否不为空
         if (StringUtils.isNoneBlank(keyword)){

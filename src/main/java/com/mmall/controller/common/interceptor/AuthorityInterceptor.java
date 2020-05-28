@@ -2,6 +2,7 @@ package com.mmall.controller.common.interceptor;
 
 import com.alibaba.fastjson.JSON;
 import com.mmall.common.Const;
+import com.mmall.common.ResponseCode;
 import com.mmall.common.ServiceResponse;
 import com.mmall.pojo.User;
 import com.mmall.util.CookieUtils;
@@ -69,14 +70,10 @@ public class AuthorityInterceptor implements HandlerInterceptor {
             response.setCharacterEncoding("UTF-8");
             response.setContentType("application/json;charset=UTF-8"); // 这里要设置返回值类型
             PrintWriter out = response.getWriter();
-
-            // todo something
             if(user == null){
-                // 这里需要谁用JsonUtils来转换 ServiceResponse.createByErrorMessage对象, 否则只会输出
-                // com.mmall.common.ServiceResponse@32fc7e30 这样的对象字符串
-                out.print(JSON.toJSONString(ServiceResponse.createByErrorMessage("拦截器拦截,用户未登录")));
+                out.print(JSON.toJSONString(ServiceResponse.createByErrorCodeMessage(ResponseCode.GLOBAL_INTERRUPT_LOGIN.getCode(),ResponseCode.GLOBAL_INTERRUPT_LOGIN.getDesc())));
             }else{
-                out.print(JSON.toJSONString(ServiceResponse.createByErrorMessage("拦截器拦截,非管理员权限")));
+                out.print(JSON.toJSONString(ServiceResponse.createByErrorCodeMessage(ResponseCode.GLOBAL_INTERRUPT_ADMIN.getCode(),ResponseCode.GLOBAL_INTERRUPT_LOGIN.getDesc())));
             }
             out.flush();
             out.close(); // 这里要关闭;

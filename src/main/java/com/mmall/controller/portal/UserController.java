@@ -79,10 +79,13 @@ public class UserController {
                                         String access_token,
                                         HttpServletRequest httpServletRequest,
                                         HttpServletResponse httpServletResponse){
-        redisUtil.del(access_token);
-        CookieUtils.deleteCookie(httpServletRequest,httpServletResponse,"access_token");
-//        session.removeAttribute(Const.CURRENT_USER);
-        return ServiceResponse.createBySuccessMessage("登出成功");
+        if(access_token == null || StringUtils.isBlank(access_token)){
+            return ServiceResponse.createByErrorCodeMessage(ResponseCode.ILLEGAL_ARGUEMENT_TOKEN.getCode(),ResponseCode.ILLEGAL_ARGUEMENT_TOKEN.getDesc());
+        }else{
+            redisUtil.del(access_token);
+            CookieUtils.deleteCookie(httpServletRequest,httpServletResponse,"access_token");
+            return ServiceResponse.createBySuccessMessage("登出成功");
+        }
     }
 
     /**
@@ -96,7 +99,7 @@ public class UserController {
     }
 
     /**
-     *  校验账号密码;
+     *  校验账号 邮箱
      * @param str
      * @param type
      * @return
@@ -111,13 +114,10 @@ public class UserController {
      * @param session
      * @return
      */
-    @RequestMapping(value ="get_user_info.do",method = RequestMethod.POST)
+    @RequestMapping(value ="get_user_info.do",method = RequestMethod.GET)
     @ResponseBody()
-    public ServiceResponse<User> getUserInfo(HttpSession session,
-                                             String access_token){
+    public ServiceResponse<User> getUserInfo(String access_token){
         User user = (User)redisUtil.get(access_token);
-//        User user = (User) session.getAttribute(Const.CURRENT_USER);
-
         // 空判断
         if(user != null){
             return ServiceResponse.createBySuccess(user);

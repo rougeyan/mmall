@@ -1,6 +1,7 @@
 package com.mmall.service.impl;
 
 import com.mmall.common.Const;
+import com.mmall.common.ResponseCode;
 import com.mmall.common.ServiceResponse;
 import com.mmall.common.TokenCache;
 import com.mmall.dao.UserMapper;
@@ -100,6 +101,9 @@ public class UserServiceImpl implements IUserService {
      * @return
      */
     public ServiceResponse selectQuestion(String username){
+        if(username == null && StringUtils.isBlank(username)){
+            return ServiceResponse.createByErrorCodeMessage(ResponseCode.ILLEGAL_ARGUEMENT_PARAMS.getCode(),ResponseCode.ILLEGAL_ARGUEMENT_PARAMS.getDesc());
+        }
         ServiceResponse validResponse = this.checkValid(username,Const.USERNAME);
         if(validResponse.isSuccess()){
             // 用户不存在

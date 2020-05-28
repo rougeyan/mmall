@@ -54,6 +54,8 @@
 
     <logger name="com.mmall.dao" level="DEBUG"/>
 
+    <!--把这部分包的日志 追加操name为console的控制台里面-->
+
     <!--<logger name="com.ibatis.sqlmap.engine.impl.SqlMapClientDelegate" level="DEBUG" >-->
         <!--<appender-ref ref="console"/>-->
     <!--</logger>-->
@@ -68,8 +70,6 @@
     <!--<logger name="java.sql.PreparedStatement" level="DEBUG">-->
         <!--<appender-ref ref="console"/>-->
     <!--</logger>-->
-
-
     <root level="DEBUG">
         <appender-ref ref="console"/>
         <appender-ref ref="error"/>

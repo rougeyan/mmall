@@ -7,6 +7,7 @@ import com.mmall.service.IUserService;
 import com.mmall.util.CookieUtils;
 import com.mmall.util.MD5Util;
 import com.mmall.util.RedisUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
@@ -37,10 +38,13 @@ public class UserManageController {
                                        HttpServletResponse httpServletResponse,
                                        String access_token){
 
-        User user = (User)redisUtil.get(access_token);
-        if(user!= null){
-            return ServiceResponse.createBySuccess("已登录",user);
+        if(StringUtils.isNotBlank(access_token)){
+            User user = (User)redisUtil.get(access_token);
+            if(user!= null){
+                return ServiceResponse.createBySuccess("已登录",user);
+            }
         }
+
         ServiceResponse<User> response = iUserService.login(username,password);
         if(response.isSuccess()){
             // 写入redis里面登录缓存;

@@ -162,7 +162,7 @@ public final class CookieUtils {
                 }
             }
             cookie.setPath("/");
-            cookie.setHttpOnly(true);
+//            cookie.setHttpOnly(true);
             response.addCookie(cookie);
         } catch (Exception e) {
             e.printStackTrace();
@@ -193,7 +193,7 @@ public final class CookieUtils {
                 }
             }
             cookie.setPath("/");
-            cookie.setHttpOnly(true);
+//            cookie.setHttpOnly(true);
             response.addCookie(cookie);
         } catch (Exception e) {
             e.printStackTrace();
