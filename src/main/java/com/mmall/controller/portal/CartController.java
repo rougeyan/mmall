@@ -9,6 +9,7 @@ import com.mmall.util.RedisUtil;
 import com.mmall.vo.CartVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -42,7 +43,7 @@ public class CartController {
      * @param productId
      * @return
      */
-    @RequestMapping("add.do")
+    @PostMapping("add.do")
     @ResponseBody
     public ServiceResponse<CartVo> add(String access_token, Integer count, Integer productId){
         User user = (User)redisUtil.get(access_token);
@@ -57,7 +58,7 @@ public class CartController {
     /**
      * 更新购物车 改变购物车数量 - +
      */
-    @RequestMapping("update.do")
+    @PostMapping("update.do")
     @ResponseBody
     public ServiceResponse<CartVo> update(String access_token, Integer count, Integer productId){
         User user = (User)redisUtil.get(access_token);
@@ -73,7 +74,7 @@ public class CartController {
      * 删除产品
      * 删除一个或多个产品 传Strings;
      */
-    @RequestMapping("delete_product.do")
+    @PostMapping("delete_product.do")
     @ResponseBody
     public ServiceResponse<CartVo> deleteProduct(String access_token,String productIds){
         User user = (User)redisUtil.get(access_token);
@@ -87,7 +88,7 @@ public class CartController {
     // 全选 全反选  单独选 单独反选
 
     // 全选
-    @RequestMapping("select_all.do")
+    @PostMapping("select_all.do")
     @ResponseBody
     public ServiceResponse<CartVo> selectAll(String access_token){
         User user = (User)redisUtil.get(access_token);
@@ -98,7 +99,7 @@ public class CartController {
         return iCartService.selectOrUnSelect(user.getId(),Const.Cart.CHECKED,null);
     }
     // 全反选
-    @RequestMapping("unselect_all.do")
+    @PostMapping("unselect_all.do")
     @ResponseBody
     public ServiceResponse<CartVo> unSelectAll(String access_token){
         User user = (User)redisUtil.get(access_token);
@@ -111,7 +112,7 @@ public class CartController {
 
 
     // 单选
-    @RequestMapping("select.do")
+    @PostMapping("select.do")
     @ResponseBody
     public ServiceResponse<CartVo> select(String access_token,Integer productId){
         User user = (User)redisUtil.get(access_token);
@@ -122,7 +123,7 @@ public class CartController {
         return iCartService.selectOrUnSelect(user.getId(),Const.Cart.CHECKED,productId);
     }
     // 单反选
-    @RequestMapping("unselect.do")
+    @PostMapping("unselect.do")
     @ResponseBody
     public ServiceResponse<CartVo> unSelectAll(String access_token,Integer productId){
         User user = (User)redisUtil.get(access_token);

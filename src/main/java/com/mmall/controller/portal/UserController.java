@@ -1,5 +1,6 @@
 package com.mmall.controller.portal;
 
+import com.google.common.collect.Maps;
 import com.mmall.common.CheckLoginStatus;
 import com.mmall.common.Const;
 import com.mmall.common.ResponseCode;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -44,7 +46,7 @@ public class UserController {
      */
     @RequestMapping(value = "login.do", method = RequestMethod.POST)
     @ResponseBody
-    public ServiceResponse<User> login(String username,
+    public ServiceResponse login(String username,
                                        String password,
                                        HttpServletRequest httpServletRequest,
                                        HttpServletResponse httpServletResponse,
@@ -55,7 +57,7 @@ public class UserController {
         // 如果有access_token的话去判定是否已经登录;
         User user = (User)redisUtil.get(access_token);
         if(user!= null){
-            return ServiceResponse.createBySuccess("已登录",user);
+            return ServiceResponse.createBySuccessMessage("已登录");
         }
         // 否则请求数据库校验登录讯息
         ServiceResponse<User> response = iUserService.login(username,password);
@@ -63,9 +65,29 @@ public class UserController {
             // 写入redis里面登录缓存;
             redisUtil.set(MD5Util.MD5EncodeUtf8(username),response.getData(),30*60);
             // 写入客户端cookie;
-            CookieUtils.setCookie(httpServletRequest,httpServletResponse,"access_token",MD5Util.MD5EncodeUtf8(username),30*60);
+            // 客户端的缓存失效时间要比redis的大
+            CookieUtils.setCookie(httpServletRequest,httpServletResponse,"access_token",MD5Util.MD5EncodeUtf8(username),60*60*4);
+            return ServiceResponse.createBySuccessMessage("登录成功");
         }
-        return response;
+        return ServiceResponse.createByErrorMessage("登录失败,请重新登录或者联系管理员");
+
+    }
+
+    /**
+     * 从redis中获取user的Id;
+     * @param access_token
+     * @return
+     */
+    @RequestMapping(value="getUserId.do")
+    @ResponseBody()
+    public ServiceResponse getUserId(String access_token){
+        User user = (User)redisUtil.get(access_token);
+        if(user!= null){
+            Map result = Maps.newHashMap();
+            result.put("userId",user.getId());
+            return ServiceResponse.createBySuccess(result);
+        }
+        return ServiceResponse.createByErrorMessage("未登录");
     }
 
     /**
@@ -109,9 +131,10 @@ public class UserController {
     public ServiceResponse<String> checkValid(String str,String type){
         return iUserService.checkValid(str, type);
     }
+
     /**
      * 获取用户信息
-     * @param session
+     * @param access_token
      * @return
      */
     @RequestMapping(value ="get_user_info.do",method = RequestMethod.GET)

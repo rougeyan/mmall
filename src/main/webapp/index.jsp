@@ -2,6 +2,17 @@
 <html>
 <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
 <body>
+<h1>Welcome to nginx!</h1>
+<p>If you see this page, the nginx web server is successfully installed and
+    working. Further configuration is required.</p>
+
+<p>For online documentation and support please refer to
+    <a href="http://nginx.org/">nginx.org</a>.<br>
+    Commercial support is available at
+    <a href="http://nginx.com/">nginx.com</a>.</p>
+
+<p><em>Thank you for using nginx.</em></p>
+
 <h2>Hello World!</h2>
 <h2>tomcat_1</h2>
 <h2>tomcat_1</h2>

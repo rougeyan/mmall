@@ -10,6 +10,7 @@ import com.mmall.service.IShippingService;
 import com.mmall.util.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -35,7 +36,7 @@ public class ShippingController {
      * @param shipping
      * @return
      */
-    @RequestMapping("add.do")
+    @PostMapping("add.do")
     @ResponseBody
     public ServiceResponse add(String access_token, Shipping shipping){
         User user = (User)redisUtil.get(access_token);
@@ -46,7 +47,7 @@ public class ShippingController {
         return iShippingService.add(user.getId(),shipping);
     }
 
-    @RequestMapping("del.do")
+    @PostMapping("del.do")
     @ResponseBody
     public ServiceResponse del(String access_token, Integer shippingId){
         User user = (User)redisUtil.get(access_token);
@@ -57,7 +58,7 @@ public class ShippingController {
         return iShippingService.del(user.getId(),shippingId);
     }
 
-    @RequestMapping("update.do")
+    @PostMapping("update.do")
     @ResponseBody
     public ServiceResponse update(String access_token, Shipping shipping){
         User user = (User)redisUtil.get(access_token);
@@ -69,7 +70,7 @@ public class ShippingController {
     }
 
 
-    @RequestMapping("select.do")
+    @PostMapping("select.do")
     @ResponseBody
     public ServiceResponse select(String access_token, Integer shippingId){
         User user = (User)redisUtil.get(access_token);
