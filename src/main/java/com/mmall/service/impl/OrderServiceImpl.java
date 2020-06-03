@@ -258,7 +258,7 @@ public class OrderServiceImpl implements IOrderService {
             OrderItem orderItem = new OrderItem();
             Product product = productMapper.selectByPrimaryKey(cartItem.getProductId());
             // 判定产品是否还在上架状态
-            if(Const.ProductStatusEnum.ON_SALE.getCode() == product.getStatus()){
+            if(Const.ProductStatusEnum.ON_SALE.getCode() != product.getStatus()){
                 return ServiceResponse.createByErrorMessage(product.getName()+"产品已下架");
             }
             // 校验库存

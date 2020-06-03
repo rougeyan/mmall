@@ -35,8 +35,8 @@ public class Const {
 
     // 产品状态枚举
     public enum ProductStatusEnum{
-        ON_SALE(1,"上架"),
-        OUT_SALE(0,"下架");
+        ON_SALE(0,"上架"),
+        OUT_SALE(1,"下架");
 
         private String value;
         private int code;
