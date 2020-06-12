@@ -87,7 +87,7 @@ public class UserController {
             result.put("userId",user.getId());
             return ServiceResponse.createBySuccess(result);
         }
-        return ServiceResponse.createByErrorMessage("未登录");
+        return  ServiceResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());
     }
 
     /**

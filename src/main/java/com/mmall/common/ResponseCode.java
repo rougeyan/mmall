@@ -18,13 +18,15 @@ public enum ResponseCode {
      */
     SUCCESS(0,"SUCCESS"),
     ERROR(1,"ERROR"),
-    NEED_LOGIN(10,"NEED_LOGIN"),
+    NEED_LOGIN(10,"用户未登录,"),
+    NEED_LOGIN_SHOWLOGINDIALOG(100005,"用户未登录,打开登录弹窗"),
+    NEED_LOGIN_REDIRECT(100006,"用户未登录,重定向login"),
     // 非法参数
     ILLEGAL_ARGUEMENT(2,"ILLEGAL_ARGUEMENT"),
     ILLEGAL_ARGUEMENT_TOKEN(100003,"非法token参数"),
     ILLEGAL_ARGUEMENT_PARAMS(100004,"传参错误"),
-    // 全局登录拦截
 
+    // 全局登录拦截
     GLOBAL_INTERRUPT_LOGIN(100001,"统一拦截,用户未登录"),
     GLOBAL_INTERRUPT_ADMIN(100002,"统一拦截,没有管理员权限");
 

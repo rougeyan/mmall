@@ -49,7 +49,7 @@ public class CartController {
         User user = (User)redisUtil.get(access_token);
         // 空判断 强制登录
         if(user == null){
-            return ServiceResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());
+            return ServiceResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN_SHOWLOGINDIALOG.getCode(),ResponseCode.NEED_LOGIN_SHOWLOGINDIALOG.getDesc());
         }
         return iCartService.add(user.getId(),productId,count);
     }
