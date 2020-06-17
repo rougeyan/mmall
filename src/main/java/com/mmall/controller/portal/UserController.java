@@ -52,6 +52,10 @@ public class UserController {
                                        HttpServletResponse httpServletResponse,
                                        String access_token
                                        ){
+        // 测试全局异常 runtimeException;
+//        int i= 0;
+//        int j = 666/i;
+
         // 流程
         //service -->mybatis --> dao
         // 如果有access_token的话去判定是否已经登录;
@@ -113,6 +117,7 @@ public class UserController {
     /**
      * 注册接口;
      * 如果不传user
+     * 注册并且登录
      */
     @RequestMapping(value ="register.do",method = RequestMethod.POST)
     @ResponseBody()
