@@ -48,6 +48,7 @@ public class ProductController {
     }
 
     // restful;这里是所有参数都传
+    // http://localhost:8081/product/手机/100002/1/10/price_asc
     @RequestMapping(value = "/{keyword}/{categoryId}/{pageNum}/{pageSize}/{orderBy}",method = RequestMethod.GET)
     @ResponseBody
     public ServiceResponse<PageInfo> listRESTful(@PathVariable(value = "keyword") String keyword,
@@ -103,8 +104,9 @@ public class ProductController {
         }
         return iProducetService.getProductByKeywordCategory(null,categoryId,pageNum,pageSize,orderBy);
     }
-    // 只传品类id(或产品id);
-    @RequestMapping(value = "/category/{keyword}/{categoryId}/{pageNum}/{pageSize}/{orderBy}",method = RequestMethod.GET)
+    // 只传品类id(或产品id); 类目下所有产品
+    // http://localhost:8081/product/keyword/100002/1/10/price_asc
+    @RequestMapping(value = "/keyword/{categoryId}/{pageNum}/{pageSize}/{orderBy}",method = RequestMethod.GET)
     @ResponseBody
     public ServiceResponse<PageInfo> listRESTful(@PathVariable(value = "categoryId") Integer categoryId,
                                                  @PathVariable(value = "pageNum") Integer pageNum ,
@@ -123,7 +125,8 @@ public class ProductController {
     }
 
     // 只传关键字;
-    @RequestMapping(value = "/keyword/{keyword}/{categoryId}/{pageNum}/{pageSize}/{orderBy}",method = RequestMethod.GET)
+    // http://localhost:8081/product/category/手机/1/10/price_asc
+    @RequestMapping(value = "/category/{keyword}/{pageNum}/{pageSize}/{orderBy}",method = RequestMethod.GET)
     @ResponseBody
     public ServiceResponse<PageInfo> listRESTful(@PathVariable(value = "keyword") String keyword,
                                                  @PathVariable(value = "pageNum") Integer pageNum ,
