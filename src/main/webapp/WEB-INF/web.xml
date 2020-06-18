@@ -72,9 +72,14 @@
     <!--*.do 的请求被springmvc拦截-->
     <!--所有的*.do请求url都被映射到dispatcher的这个servlet上面-->
     <!--配置servlet的映射路径-->
+    <!--<servlet-mapping>-->
+        <!--<servlet-name>dispatcher</servlet-name>-->
+        <!--<url-pattern>*.do</url-pattern>-->
+    <!--</servlet-mapping>-->
+    <!--改造restful-->
     <servlet-mapping>
         <servlet-name>dispatcher</servlet-name>
-        <url-pattern>*.do</url-pattern>
+        <url-pattern>/</url-pattern>
     </servlet-mapping>
 
 </web-app>
