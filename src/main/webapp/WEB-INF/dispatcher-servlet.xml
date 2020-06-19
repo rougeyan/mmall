@@ -11,6 +11,9 @@
     <context:component-scan base-package="com.mmall.controller" annotation-config="true" use-default-filters="false">
         <!--白名单 springmvc只扫描注解为controller-->
         <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+        <!--[SSM的配置和@Transactional的使用讲解](http://blogcenter.cn/?id=49)-->
+        <!--把Service注解exclude掉-->
+        <context:exclude-filter expression="org.springframework.stereotype.Service" type="annotation"/>
     </context:component-scan>
 
     <mvc:annotation-driven>

@@ -11,6 +11,7 @@ import com.mmall.util.MD5Util;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
@@ -25,7 +26,6 @@ public class UserServiceImpl implements IUserService {
         if(resultCount ==0){
             return ServiceResponse.createByErrorMessage("用户名不存在");
         }
-
         // todo 密码登录md5
         // 这里比较是加密过得MD5密码
         String md5password = MD5Util.MD5EncodeUtf8(password);
@@ -43,6 +43,7 @@ public class UserServiceImpl implements IUserService {
      * @param user
      * @return
      */
+    @Transactional(rollbackFor = RuntimeException.class)
     public ServiceResponse<String> register(User user) {
         // 因为有可能注册传的是username / email 复用到this.checkValid
         // 首先校验username 用户名是否存在;
@@ -62,6 +63,9 @@ public class UserServiceImpl implements IUserService {
         user.setPassword(MD5Util.MD5EncodeUtf8(user.getPassword()));
         // 不能设置密码为明文; MD5加密
         int resultCount = userMapper.insert(user);
+//        // 模拟异常;
+//        int x= 0;
+//        int y = 666/x;
         if(resultCount == 0){
             return ServiceResponse.createByErrorMessage("注册失败");
         }

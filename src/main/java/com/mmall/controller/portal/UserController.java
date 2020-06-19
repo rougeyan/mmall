@@ -53,9 +53,6 @@ public class UserController {
                                        String access_token
                                        ){
         // 测试全局异常 runtimeException;
-//        int i= 0;
-//        int j = 666/i;
-
         // 流程
         //service -->mybatis --> dao
         // 如果有access_token的话去判定是否已经登录;

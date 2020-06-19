@@ -20,11 +20,12 @@ public class ProductController {
      * @param productId
      * @return
      */
-    // @RequestMapping("detail.do") http://localhost:8081/product/detail.do?productId=28
-    @RequestMapping(value = "/{productId}",method = RequestMethod.GET)
+    @RequestMapping("detail.do")
+//    http://localhost:8081/product/detail.do?productId=28
+//    @RequestMapping(value = "/{productId}",method = RequestMethod.GET)
     // http://localhost:8081/product/28 相对简洁一些 配合注解 @PathVariable
     @ResponseBody
-    public ServiceResponse<ProductDetailVo> detail (@PathVariable Integer productId){
+    public ServiceResponse<ProductDetailVo> detail (Integer productId){
         return iProducetService.getProductDetail(productId);
     }
 

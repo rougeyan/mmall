@@ -4,15 +4,16 @@ package com.mmall.service.impl;
 //import com.alipay.api.domain.GoodsDetail;
 import com.alipay.api.AlipayResponse;
 import com.alipay.api.response.AlipayTradePrecreateResponse;
+// 默认引入configs
 import com.alipay.demo.trade.config.Configs;
 import com.alipay.demo.trade.model.ExtendParams;
 import com.alipay.demo.trade.model.GoodsDetail;
 import com.alipay.demo.trade.model.builder.AlipayTradePrecreateRequestBuilder;
-
 import com.alipay.demo.trade.model.result.AlipayF2FPrecreateResult;
 import com.alipay.demo.trade.service.AlipayTradeService;
 import com.alipay.demo.trade.service.impl.AlipayTradeServiceImpl;
 import com.alipay.demo.trade.utils.ZxingUtils;
+
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
@@ -552,6 +553,7 @@ public class OrderServiceImpl implements IOrderService {
          */
         AlipayTradeService tradeService = new AlipayTradeServiceImpl.ClientBuilder().build();
 
+        // 当面付2.0预下单（产生二维码）应答
         AlipayF2FPrecreateResult result = tradeService.tradePrecreate(builder);
         // 匹配返回结果
         switch (result.getTradeStatus()) {
