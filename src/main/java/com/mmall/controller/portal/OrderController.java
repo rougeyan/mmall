@@ -12,7 +12,8 @@ import com.mmall.service.ICategoryService;
 import com.mmall.service.IOrderService;
 import com.mmall.util.PropertiesUtil;
 import com.mmall.util.RedisUtil;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,8 +27,9 @@ import java.util.Map;
 
 @Controller
 @RequestMapping("/order/")
-@Slf4j
 public class OrderController {
+
+    private static final Logger logger = LoggerFactory.getLogger(OrderController.class);
 
     @Autowired
     private IOrderService iOrderService;
@@ -157,7 +159,7 @@ public class OrderController {
             }
             params.put(name,valueStr);
         }
-        log.info("支付宝回调,sign:{},trade_status:{},参数:{}",
+        logger.info("支付宝回调,sign:{},trade_status:{},参数:{}",
                 params.get("sign"),
                 params.get("trade_status"),
                 params.toString());
@@ -170,7 +172,7 @@ public class OrderController {
                 return  ServiceResponse.createByErrorMessage("非法请求,验证不通过");
             }
         }catch(AlipayApiException e){
-            log.error("支付宝回调异常",e);
+            logger.error("支付宝回调异常",e);
         }
         // 处理alipay回调地址的 正常业务逻辑
         // 更新订单状态 判定订单是否已经支付过了 .. 逻辑
