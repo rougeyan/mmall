@@ -1,10 +1,13 @@
 package com.mmall.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.mmall.common.ServiceResponse;
 import com.mmall.dao.CategoryMapper;
 import com.mmall.pojo.Category;
+import com.mmall.pojo.Shipping;
 import com.mmall.service.ICategoryService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -14,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -41,29 +45,48 @@ public class CategoryServiceImpl implements ICategoryService {
         }
         return ServiceResponse.createByErrorMessage("添加品类失败");
     }
-    // 更新品类
-    public ServiceResponse updateCategoryName(Integer categoryId, String categoryName){
-        if (categoryId == null || StringUtils.isBlank(categoryName)){
+
+    // 更新品类信息
+    public ServiceResponse updateCategory(Category category){
+        Integer categoryId = category.getId();
+        Integer categoryParentId = category.getParentId();
+        String categoryName = category.getName();
+        Boolean categoryStatus = category.getStatus();
+        if (categoryStatus == null || categoryParentId == null ||categoryId == null || StringUtils.isBlank(categoryName)){
             return ServiceResponse.createByErrorMessage("更新品类参数错误");
         }
-        Category category = new Category();
-        category.setId(categoryId);
-        category.setName(categoryName);
 
-        int rowCount = categoryMapper.updateByPrimaryKeySelective(category);
-        if(rowCount>0){
-            return ServiceResponse.createBySuccess("更新品类名字成功");
+
+        Category paranetCategory = categoryMapper.selectByPrimaryKey(categoryParentId);
+        if(paranetCategory == null){
+            return ServiceResponse.createByErrorMessage("找不到父品类id");
         }
-        return ServiceResponse.createByErrorMessage("更新品类名字失败");
+
+        Category categoryModel = new Category();
+        categoryModel.setId(category.getId());
+        categoryModel.setName(category.getName());
+        categoryModel.setParentId(category.getParentId());
+        categoryModel.setStatus(category.getStatus());
+        categoryModel.setUpdateTime(new Date());
+
+        int rowCount = categoryMapper.updateByPrimaryKeySelective(categoryModel);
+        if(rowCount>0){
+            return ServiceResponse.createBySuccess("更新品类成功");
+        }
+        return ServiceResponse.createByErrorMessage("更新品类失败");
     }
 
     // 查询子节点的category信息, 并且不递归 保持平级
-    public ServiceResponse<List<Category>> getChildrenParalleCategory(Integer categoryId){
+    public ServiceResponse<PageInfo> getChildrenParalleCategory(Integer categoryId,int pageNum, int pageSize){
+
+        PageHelper.startPage(pageNum,pageSize);
         List<Category> categoryList = categoryMapper.selectCategoryChildrenByParentId(categoryId);
         if(CollectionUtils.isEmpty(categoryList)){
             logger.info("未找到当前分类的子类");
         }
-        return ServiceResponse.createBySuccess(categoryList);
+        PageInfo pageInfo = new PageInfo(categoryList);
+
+        return ServiceResponse.createBySuccess(pageInfo);
     }
 
     /**

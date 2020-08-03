@@ -1,5 +1,6 @@
 package com.mmall.service;
 
+import com.github.pagehelper.PageInfo;
 import com.mmall.common.ServiceResponse;
 import com.mmall.pojo.Category;
 
@@ -8,9 +9,9 @@ import java.util.List;
 public interface ICategoryService {
     ServiceResponse addCategory(String categoryName, Integer parentId);
 
-    ServiceResponse updateCategoryName(Integer categoryId, String categoryName);
+    ServiceResponse updateCategory(Category category);
 
-    ServiceResponse<List<Category>> getChildrenParalleCategory(Integer categoryId);
+    ServiceResponse<PageInfo> getChildrenParalleCategory(Integer categoryId,int pageNum, int pageSize);
 
     ServiceResponse<List<Integer>> selectCategoryAndChildrenById(Integer categoryId);
 }

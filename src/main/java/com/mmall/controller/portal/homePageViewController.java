@@ -26,6 +26,7 @@ public class homePageViewController {
     @ResponseBody
     public ServiceResponse getChildrenParalleCategory(HttpSession session, @RequestParam(value ="categoryId",defaultValue = "0") int categoryId){
         // 查询子节点的category信息, 并且不递归 保持平级
-        return iCategoryService.getChildrenParalleCategory(categoryId);
+//        return iCategoryService.getChildrenParalleCategory(categoryId);
+        return null;
     }
 }

@@ -1,5 +1,8 @@
 package com.mmall.pojo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.util.Date;
 
 public class Category {
@@ -12,9 +15,11 @@ public class Category {
     private Boolean status;
 
     private Integer sortOrder;
-
+    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+//    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date createTime;
-
+    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss") // 前端传后端 格式转换
+//    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8") // 返回给前端的格式
     private Date updateTime;
 
     public Category(Integer id, Integer parentId, String name, Boolean status, Integer sortOrder, Date createTime, Date updateTime) {

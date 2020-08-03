@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mmall.dao.DictMapper">
+  <resultMap id="BaseResultMap" type="com.mmall.pojo.Dict">
+    <constructor>
+      <idArg column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="pid" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="data_type" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="data_code" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="data_value" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="sort_no" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="status" javaType="java.lang.Byte" jdbcType="TINYINT" />
+      <arg column="data_desc" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="update_time" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, pid, data_type, data_code, data_value, sort_no, status, data_desc, update_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from mmall_sys_dict
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from mmall_sys_dict
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.mmall.pojo.Dict">
+    insert into mmall_sys_dict (id, pid, data_type, 
+      data_code, data_value, sort_no, 
+      status, data_desc, update_time
+      )
+    values (#{id,jdbcType=INTEGER}, #{pid,jdbcType=INTEGER}, #{dataType,jdbcType=VARCHAR}, 
+      #{dataCode,jdbcType=VARCHAR}, #{dataValue,jdbcType=VARCHAR}, #{sortNo,jdbcType=INTEGER}, 
+      #{status,jdbcType=TINYINT}, #{dataDesc,jdbcType=VARCHAR}, now()
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.mmall.pojo.Dict">
+    insert into mmall_sys_dict
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="pid != null">
+        pid,
+      </if>
+      <if test="dataType != null">
+        data_type,
+      </if>
+      <if test="dataCode != null">
+        data_code,
+      </if>
+      <if test="dataValue != null">
+        data_value,
+      </if>
+      <if test="sortNo != null">
+        sort_no,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="dataDesc != null">
+        data_desc,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="pid != null">
+        #{pid,jdbcType=INTEGER},
+      </if>
+      <if test="dataType != null">
+        #{dataType,jdbcType=VARCHAR},
+      </if>
+      <if test="dataCode != null">
+        #{dataCode,jdbcType=VARCHAR},
+      </if>
+      <if test="dataValue != null">
+        #{dataValue,jdbcType=VARCHAR},
+      </if>
+      <if test="sortNo != null">
+        #{sortNo,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="dataDesc != null">
+        #{dataDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        now(),
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.mmall.pojo.Dict">
+    update mmall_sys_dict
+    <set>
+      <if test="pid != null">
+        pid = #{pid,jdbcType=INTEGER},
+      </if>
+      <if test="dataType != null">
+        data_type = #{dataType,jdbcType=VARCHAR},
+      </if>
+      <if test="dataCode != null">
+        data_code = #{dataCode,jdbcType=VARCHAR},
+      </if>
+      <if test="dataValue != null">
+        data_value = #{dataValue,jdbcType=VARCHAR},
+      </if>
+      <if test="sortNo != null">
+        sort_no = #{sortNo,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="dataDesc != null">
+        data_desc = #{dataDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        update_time = now(),
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.mmall.pojo.Dict">
+    update mmall_sys_dict
+    set pid = #{pid,jdbcType=INTEGER},
+      data_type = #{dataType,jdbcType=VARCHAR},
+      data_code = #{dataCode,jdbcType=VARCHAR},
+      data_value = #{dataValue,jdbcType=VARCHAR},
+      sort_no = #{sortNo,jdbcType=INTEGER},
+      status = #{status,jdbcType=TINYINT},
+      data_desc = #{dataDesc,jdbcType=VARCHAR},
+      update_time = now()
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <select id="getDictsTypes" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from mmall_sys_dict
+  </select>
+
+  <select id="checkExistDict" resultType="int" parameterType="map">
+    select count(1) from mmall_sys_dict
+    where data_type = #{dataType}
+      And data_code = #{dataCode}
+  </select>
+</mapper>

@@ -176,13 +176,13 @@ public class OrderServiceImpl implements IOrderService {
     private ShippingVo assembleShippingVo(Shipping shipping){
         ShippingVo shippingVo = new ShippingVo();
         shippingVo.setReceiverName(shipping.getReceiverName());
-        shippingVo.setReceiverAddress(shipping.getReceiverCity());
+        shippingVo.setReceiverAddress(shipping.getReceiverAddress());
         shippingVo.setReceiverProvince(shipping.getReceiverProvince());
         shippingVo.setReceiverCity(shipping.getReceiverCity());
         shippingVo.setReceiverDistrict(shipping.getReceiverDistrict());
         shippingVo.setReceiverMobile(shipping.getReceiverMobile());
-        shippingVo.setReceiverZip(shippingVo.getReceiverAddress());
-        shippingVo.setReceiverPhone(shippingVo.getReceiverPhone());
+        shippingVo.setReceiverZip(shipping.getReceiverZip());
+        shippingVo.setReceiverPhone(shipping.getReceiverPhone());
         return  shippingVo;
     }
 
@@ -389,12 +389,15 @@ public class OrderServiceImpl implements IOrderService {
 
     public ServiceResponse<PageInfo> manageList(int pageNum,int pageSize){
         PageHelper.startPage(pageNum,pageSize);
+        // 若无Order参数则查询所有订单
         List<Order> orderList = orderMapper.selectAllOrder();
         // 因为这个是复用的 为了重用 不传就是管理员;
         List<OrderVo> orderVoList = this.assembleOrderVoList(orderList,null);
         PageInfo pageResult = new PageInfo(orderList);
         pageResult.setList(orderVoList);
         return ServiceResponse.createBySuccess(pageResult);
+
+        // 模糊匹配订单信息
     }
 
     // API - 订单详情

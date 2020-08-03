@@ -30,19 +30,20 @@ public class OrderManageController {
     public ServiceResponse<PageInfo> orderList(HttpSession session,
                                                @RequestParam(value ="pageNum",defaultValue = "1") int pageNum,
                                                @RequestParam(value ="pageSize",defaultValue = "10") int pageSize){
-////        User user = (User)session.getAttribute(Const.CURRENT_USER);
-////        if(user == null){
-////            return  ServiceResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),"用户未登录,请登录");
-////        }
-////        // 校验一下是否是管理员
-////        if(iUserService.checkAdminRole(user).isSuccess()){
-////            // 填充业务员逻辑;
-////
-////        }else{
-////            return ServiceResponse.createByErrorMessage("无权限操作,需要管理员权限");
-////        }
         return iOrderService.manageList(pageNum,pageSize);
     }
+
+//    @RequestMapping("listSearch.do")
+//    @ResponseBody
+//    public ServiceResponse<PageInfo> orderVoList(HttpSession session,
+//                                               @RequestParam(value ="pageNum",defaultValue = "1") int pageNum,
+//                                               @RequestParam(value ="pageSize",defaultValue = "10") int pageSize,
+//                                                 Long orderNo, // 订单号
+//                                                 Integer paymentType, // 支付渠道
+//                                                 Integer status, // 支付状态
+//                                                 String receivedName //联系人){
+//        return iOrderService.manageList(pageNum,pageSize);
+//    }
 
     // backend
 
@@ -61,7 +62,8 @@ public class OrderManageController {
                                                  @RequestParam(value ="pageSize",defaultValue = "10") int pageSize){
         return iOrderService.manageSearch(orderNo,pageNum,pageSize);
     }
-    
+
+    // 发货
     @RequestMapping("send_goods.do")
     @ResponseBody
     public ServiceResponse<String> orderSendGoods(HttpSession session, Long orderNo){
