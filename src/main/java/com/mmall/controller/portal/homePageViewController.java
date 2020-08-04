@@ -24,9 +24,10 @@ public class homePageViewController {
      */
     @RequestMapping("get_category.do")
     @ResponseBody
-    public ServiceResponse getChildrenParalleCategory(HttpSession session, @RequestParam(value ="categoryId",defaultValue = "0") int categoryId){
+    public ServiceResponse getChildrenParalleCategory(@RequestParam(value ="categoryId",defaultValue = "0") int categoryId,
+                                                      @RequestParam(value ="pageNum",defaultValue = "1") int pageNum,
+                                                      @RequestParam(value ="pageSize",defaultValue = "10") int pageSize){
         // 查询子节点的category信息, 并且不递归 保持平级
-//        return iCategoryService.getChildrenParalleCategory(categoryId);
-        return null;
+        return iCategoryService.getChildrenParalleCategory(categoryId,pageNum,pageSize);
     }
 }

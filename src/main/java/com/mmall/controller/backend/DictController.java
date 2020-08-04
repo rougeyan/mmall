@@ -1,4 +1,4 @@
-package com.mmall.controller.portal;
+package com.mmall.controller.backend;
 
 import com.mmall.common.ServiceResponse;
 import com.mmall.pojo.Dict;
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-@RequestMapping("/dict/")
+@RequestMapping("/manage/dict/")
 public class DictController {
     @Autowired
     private IDictService iDictService;
