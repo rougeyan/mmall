@@ -26,5 +26,7 @@ public interface OrderMapper {
 
     List<Order> selectAllOrder();
 
+    List<Order> selectQueryAllOrder(@Param("orderNo") Long orderNo,@Param("status") String status, @Param("paymentType") String paymentType);
+
 
 }

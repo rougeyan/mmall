@@ -30,10 +30,8 @@ import com.mmall.vo.OrderItemVo;
 import com.mmall.vo.OrderProductVo;
 import com.mmall.vo.OrderVo;
 import com.mmall.vo.ShippingVo;
-import com.sun.org.apache.bcel.internal.generic.RETURN;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
-import org.aspectj.weaver.ast.Or;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -393,11 +391,23 @@ public class OrderServiceImpl implements IOrderService {
         List<Order> orderList = orderMapper.selectAllOrder();
         // 因为这个是复用的 为了重用 不传就是管理员;
         List<OrderVo> orderVoList = this.assembleOrderVoList(orderList,null);
+
         PageInfo pageResult = new PageInfo(orderList);
         pageResult.setList(orderVoList);
         return ServiceResponse.createBySuccess(pageResult);
 
-        // 模糊匹配订单信息
+    }
+
+    // 模糊订单查询
+    public ServiceResponse<PageInfo> manageQueryList(int pageNum, int pageSize, Long orderNo,String status, String paymentType) {
+        PageHelper.startPage(pageNum,pageSize);
+        List<Order> orderList = orderMapper.selectQueryAllOrder(orderNo,status,paymentType); // 纯表单的list
+//        // 若无Order参数则查询所有订单
+//        // 因为这个是复用的 为了重用 不传就是管理员; // 传就是用户
+        List<OrderVo> orderVoList = this.assembleOrderVoList(orderList,null);
+        PageInfo pageResult = new PageInfo(orderList);
+        pageResult.setList(orderVoList);
+        return ServiceResponse.createBySuccess(pageResult);
     }
 
     // API - 订单详情
