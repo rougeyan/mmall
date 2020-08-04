@@ -152,4 +152,31 @@
     where data_type = #{dataType}
       And data_code = #{dataCode}
   </select>
+
+
+  <select id="selectQueryAllDict" resultMap="BaseResultMap" parameterType="com.mmall.pojo.Dict">
+    select
+    <include refid="Base_Column_List" />
+    from mmall_sys_dict
+    where 1=1
+    <if test="dataType != null">
+      and data_type like concat('%',#{dataType},'%')
+    </if>
+    <if test="dataCode != null">
+      and data_code = #{dataCode}
+    </if>
+    <if test="dataValue != null">
+      and data_value = #{dataValue}
+    </if>
+    <if test="dataDesc != null">
+      and data_desc like concat('%',#{dataDesc},'%')
+    </if>
+    <if test="status != null">
+      and status = status
+    </if>
+    <if test="pid != null">
+      and pid = #{pid}
+    </if>
+    order by update_time desc
+  </select>
 </mapper>

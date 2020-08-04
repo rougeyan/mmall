@@ -22,4 +22,6 @@ public interface DictMapper {
     List<Dict> getDictsTypes();
 
     int checkExistDict(@Param("dataType") String dataType, @Param("dataCode") String dataCode);
+
+    List<Dict> selectQueryAllDict(Dict dict);
 }

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
@@ -32,5 +33,13 @@ public class DictController {
     @ResponseBody()
     public ServiceResponse getDicts(){
         return iDictService.getDict();
+    }
+
+    @RequestMapping(value ="list.do",method = RequestMethod.POST)
+    @ResponseBody()
+    public ServiceResponse dictList(@RequestParam(value ="pageNum",defaultValue = "1") int pageNum,
+                                    @RequestParam(value ="pageSize",defaultValue = "10") int pageSize,
+                                    Dict dict){
+        return iDictService.dictLists(pageNum,pageSize,dict);
     }
 }

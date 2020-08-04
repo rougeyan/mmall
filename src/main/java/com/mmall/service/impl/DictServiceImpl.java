@@ -1,6 +1,8 @@
 package com.mmall.service.impl;
 
 import com.alipay.demo.trade.model.GoodsDetail;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -45,6 +47,11 @@ public class DictServiceImpl implements IDictService {
         }
         return ServiceResponse.createBySuccessMessage("添加字典失败");
     }
+    // 获取字典列表
+//    public ServiceResponse getDictLists(Dict dict){
+//
+//        return null;
+//    }
     public ServiceResponse getDict(){
         List<Dict> allDcits = dictMapper.getDictsTypes();
         Set<String> typeSet = Sets.newHashSet();
@@ -65,6 +72,13 @@ public class DictServiceImpl implements IDictService {
             dictionary.put(setItem,kv);
         }
         return ServiceResponse.createBySuccess(dictionary);
+    }
+
+    public ServiceResponse<PageInfo> dictLists(int pageNum,int pageSize, Dict dict) {
+        PageHelper.startPage(pageNum,pageSize);
+        List<Dict> dictList =  dictMapper.selectQueryAllDict(dict);
+        PageInfo pageInfo = new PageInfo(dictList);
+        return ServiceResponse.createBySuccess(pageInfo);
     }
 
 //    /**

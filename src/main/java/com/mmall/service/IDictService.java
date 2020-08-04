@@ -7,4 +7,6 @@ public interface IDictService {
     ServiceResponse addDict(Dict dict);
 
     ServiceResponse getDict();
+
+    ServiceResponse dictLists(int pageNum, int pageSize,Dict dict);
 }
